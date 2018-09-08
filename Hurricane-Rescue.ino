@@ -15,6 +15,7 @@ int amountSeen     = 0;
 
 bool atWall = false;
 bool turning = false;
+bool pickingUp = false;
 
 char redPath[40];
 char neutralPath[40];
@@ -225,77 +226,126 @@ bool waitState() {
   return false;
 }
 
-bool doTurnSequence(const char sequence[], int index) {
-  static bool turning = false;
-  otherPrintVar = turning;
-  if(turning) {
-    if(turn(100, 100, sequence[index])) {
-      turning = false;
-      return true;
+
+void doPickupSequence(const char sequence[], int pathIndex) {
+  static int pickupStateIndex = 0;
+  static bool nextSquare = true;
+  static int prevIndex = pathIndex;
+  if(prevIndex != pathIndex) {
+    prevIndex = pathIndex;
+    nextSquare = true;
+  }
+  if(nextSquare){
+    if(sequence[index] == EMPTY) {
+      nextSquare = false;
+      return;
     }
-  } else {
-    turning = lineFollow(150, 26);
+    else if(sequence[index] == LEFT) {
+      switch(pickupStateIndex) {
+        case 0:
+          leftClawArm.write(L_DOWN_POS);
+          if(delayState(400)) pickupStateIndex++;
+          break;
+        case 1:
+          if(leftClawSensor < PERSON_CLOSE) {
+            leftClaw.write(L_CLOSE);
+            if(delayState(100)) pickupStateIndex++;
+          }
+          break;
+        case 2:
+          leftClawArm.write(L_UP_POS);
+          if(delayState(400)) pickupStateIndex++;
+          break;
+        case 3:
+          leftClaw.write(L_OPEN);
+          if(delayState(100)) {
+            pickupStateIndex = 0;
+            nextSquare = false;
+            return;
+          }
+          break;
+        default:
+          leftClawArm.write(L_UP_POS);
+          lefttClaw.write(L_OPEN);
+          break;
+      }
+    }
+    else if(sequence[index] == RIGHT) {
+      switch(pickupStateIndex) {
+        case 0:
+          rightClawArm.write(R_DOWN_POS);
+          if(delayState(400)) pickupStateIndex++;
+          break;
+        case 1:
+          if(rightClawSensor < PERSON_CLOSE) {
+            rightClaw.write(R_CLOSE);
+            if(delayState(100)) pickupStateIndex++;
+          }
+          break;
+        case 2:
+          rightClawArm.write(R_UP_POS);
+          if(delayState(400)) pickupStateIndex++;
+          break;
+        case 3:
+          rightClaw.write(R_OPEN);
+          if(delayState(100)) {
+            pickupStateIndex = 0;
+            nextSquare = false;
+            return ;
+          }
+          break;
+        default:
+          rightClawArm.write(R_UP_POS);
+          rightClaw.write(R_OPEN);
+          break;
+      }
+    }
   }
-  return false;
+  return;
 }
-
-// State 1
-//  Starts the first turn sequence and returns true after
-bool followTrackState() {
-  static int state = 0;
-
-  printVar = state;
-  bool isFinished = false;
-
-  // FIXME: old code that turns the robot off only after 14 turns
-  switch(state) {
-    case 14:
-      isFinished = amountSeen > TURN_AMOUNT;
-      break;
-  }
-
-  // Will be true after the individual turn is finished, then state++ so the next turn goes
-  if(doTurnSequence(TURN_SEQUENCE, state)) state++;
-
-  return isFinished;
-}
-
 
 
 bool doTurnSequence(const char sequence[], int index, int maxSteps) {
-  if(turning) {
-    if(turn(HALF_SPEED, sequence[index])) {
-      turning = false;
+  index++; // should be acting on next instruction, not current
+  if(index == maxSteps) {
+    if(lineFollow(HALF_SPEED, 50)){
       return true;
     }
-  } else {
-    if(index + 1 < maxSteps){
-      if(sequence[index + 1] == FORWARD) {
-        turning = lineFollow(FULL_SPEED, 50);
-        return false;
+  }
+  else {
+    if(turning) {
+      if(turn(HALF_SPEED, sequence[index])) {
+        turning = false;
+        return true;
       }
+    } else {
+      /*if(index + 1 < maxSteps){
+        if(sequence[index + 1] == FORWARD) {
+          turning = lineFollow(FULL_SPEED, 50);
+          return false;
+        }
+      } //should work, but not tested with person*/
+      turning = lineFollow(HALF_SPEED, 50);
     }
-    turning = lineFollow(HALF_SPEED, 50);
   }
   return false;
 }
 
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
-  if(doTurnSequence(redPath, redIndex, redSteps) &&
-    doPickupSequence(redPickup, redIndex, redSteps)) redIndex++;
-
+  if(doTurnSequence(redPath, redIndex, redSteps) redIndex++;
+  doPickupSequence(redPickup, redIndex);
   return false;
 }
 
 bool followNeutralPathState() {
-
   if(neutralIndex == neutralSteps) return true;
-  if(doTurnSequence(neutralPath, neutralIndex, neutralSteps) &&
-    doPickupSequence(neutralPickup, neutralIndex, neutralSteps)) neutralIndex++;
-
+  if(doTurnSequence(neutralPath, neutralIndex, neutralSteps) neutralIndex++;
+  doPickupSequence(neutralPickup, neutralIndex);
   return false;
 }
+
+
 
 bool depositPeopleState(){
   dump.write(DO_DUMP);
@@ -316,12 +366,14 @@ void loop() {
       break;
     case 1:
       if(followRedPathState())  state++;
+
       break;
     case 2:
       if(depositPeopleState())  state++;
       break;
     case 3:
       if(followNeutralPathState()) state++;
+      ;
       break;
     case 4:
       if(depositPeopleState()) state++;
