@@ -17,8 +17,6 @@
   return false;
 }*/
 
-//testing
-
 int sensors[8]     = {0};
 int firstLineIndex = -1;
 int lastLineIndex  = -1;
