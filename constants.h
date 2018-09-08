@@ -20,7 +20,6 @@ const bool WHEEL_BACKWARDS  = false;
 
 
 
-
 // OLD turn sequences
 const char TURN_SEQUENCE[] = {
   LEFT, RIGHT, LEFT, LEFT, LEFT, LEFT, RIGHT, RIGHT, LEFT, RIGHT, RIGHT, RIGHT, LEFT, LEFT
