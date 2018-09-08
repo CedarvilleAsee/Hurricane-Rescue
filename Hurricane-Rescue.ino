@@ -17,6 +17,7 @@
   return false;
 }*/
 
+//testing
 
 int sensors[8]     = {0};
 int firstLineIndex = -1;
@@ -52,12 +53,12 @@ void setup() {
   pinMode(BUTTON1, INPUT_PULLUP);
 
   /*
-   * The following output configurations set both motors 
+   * The following output configurations set both motors
    * to move forward. The two Robot solution doesn't require
    * backwards movement, so the wheels should be permanently
    * forward.
    *
-   * - Note: when the new boards are installed, this code will be 
+   * - Note: when the new boards are installed, this code will be
    *        changed because the board is going to tie these to high
    *  - Issues here the right wheel is only spinning backwards
    */
@@ -82,9 +83,9 @@ void readLine() {
   amountSeen = 0;
   lastLineIndex = -1;
   for(int i = 7; i >= 0; --i) {
-    
+
     sensors[i] = digitalRead(LINE_SENSOR[i]);
-    
+
     if(sensors[i] == HIGH) {
       if(lastLineIndex == -1) {
         lastLineIndex = i;
@@ -166,7 +167,7 @@ bool doTurnSequence(const char sequence[], int index) {
 }
 
 // State 1
-//  Starts the first turn sequence and returns true after 
+//  Starts the first turn sequence and returns true after
 bool followTrackState() {
   static int state = 0;
 
@@ -182,7 +183,7 @@ bool followTrackState() {
 
   // Will be true after the individual turn is finished, then state++ so the next turn goes
   if(doTurnSequence(TURN_SEQUENCE, state)) state++;
-  
+
   return isFinished;
 }
 
@@ -191,10 +192,10 @@ void loop() {
   readLine();
   switch(state) {
     case 0:
-      if(waitState())  state++; 
+      if(waitState())  state++;
       break;
     case 1:
-      if(followTrackState())  state++; 
+      if(followTrackState())  state++;
       break;
     //case 2:
       //if(Next state is done)  state++;
