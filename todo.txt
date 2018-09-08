@@ -1,2 +1,2 @@
 Translate test code to the main repo
-Make code for pickups that run along side the turn sequence
+Make code for pickups that run with the turn sequence
