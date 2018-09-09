@@ -21,8 +21,7 @@ const int WHEEL_STBY = 33;
 int LINE_SENSOR[] = {37, 39, 41, 43, 45, 47, 49, 51};
 
 //Analog
-//const int BACK_RIGHT_SENSOR = A0;
-//const int BACK_LEFT_SENSOR = A1;
+
 // Sorter light
 const int SENSOR_A   = 86;
 const int SENSOR_CLK = 87;
@@ -40,3 +39,8 @@ const int SORTER   = 4;
 //const int RIGHT_ELBOW = 6;
 //const int LEFT_ELBOW = 5;
 
+//fix these
+const int FRONT_RIGHT_SENSOR = A0;
+const int FRONT_LEFT_SENSOR = A1;
+const int RIGHT_CLAW_SENSOR = A2;
+const int LEFT_CLAW_SENSOR = A3;

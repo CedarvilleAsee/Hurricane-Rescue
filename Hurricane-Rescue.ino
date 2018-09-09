@@ -6,12 +6,18 @@
 #include "missions.h"
 
 
-
-
 int sensors[8]     = {0};
 int firstLineIndex = -1;
 int lastLineIndex  = -1;
 int amountSeen     = 0;
+
+int mission = 1; // this will be changed by swtiches
+//temp
+Servo leftClawArm;
+Servo rightClawArm;
+Servo leftClaw;
+Servo rightClaw;
+Servo dump;
 
 bool atWall = false;
 bool turning = false;
@@ -61,12 +67,11 @@ void setup() {
    *        changed because the board is going to tie these to high
    *  - Issues here the right wheel is only spinning backwards
    */
-  writeWheelDirection(true);
+  writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
   digitalWrite(WHEEL_STBY  , HIGH);
 
   Serial.begin(115200);
-  Serial3.begin(115200);
-  Serial3.write("Does this thing really work?!");
+ 
 }
 
 
@@ -100,6 +105,12 @@ int readFrontRight(){//gets data val from right infraread sensor IMH
 }
 int readFrontLeft(){//gets data val from left infraread sensor IMH
   return analogRead(FRONT_LEFT_SENSOR);
+}
+int readRightClaw() {
+   return analogRead(RIGHT_CLAW_SENSOR);
+}
+int readLeftClaw() {
+   return analogRead(LEFT_CLAW_SENSOR);
 }
 bool twoConsecutiveAtMiddle() {
   return twoConsecutive() && firstLineIndex >= TARGET_INDEX;
@@ -143,11 +154,11 @@ bool lineFollow(int ts, int strictness) {
   writeToWheels(leftSpeed, rightSpeed);
 
   // Return true if the sensors can see a fork
-  if(readFrontRight < 30) {
+  if(readFrontRight() < 30) {
     atWall = true;
     return true;
   }
-  return (digitalRead(FORK_SENSOR) == HIGH)//amountSeen > TURN_AMOUNT;
+  return amountSeen > TURN_AMOUNT;
 }
 
 bool turn(int spd, char dir) {
@@ -236,18 +247,18 @@ void doPickupSequence(const char sequence[], int pathIndex) {
     nextSquare = true;
   }
   if(nextSquare){
-    if(sequence[index] == EMPTY) {
+    if(sequence[pathIndex] == EMPTY) {
       nextSquare = false;
       return;
     }
-    else if(sequence[index] == LEFT) {
+    else if(sequence[pathIndex] == LEFT) {
       switch(pickupStateIndex) {
         case 0:
           leftClawArm.write(L_DOWN_POS);
           if(delayState(400)) pickupStateIndex++;
           break;
         case 1:
-          if(leftClawSensor < PERSON_CLOSE) {
+          if(readLeftClaw() < PERSON_CLOSE) {
             leftClaw.write(L_CLOSE);
             if(delayState(100)) pickupStateIndex++;
           }
@@ -266,18 +277,18 @@ void doPickupSequence(const char sequence[], int pathIndex) {
           break;
         default:
           leftClawArm.write(L_UP_POS);
-          lefttClaw.write(L_OPEN);
+          leftClaw.write(L_OPEN);
           break;
       }
     }
-    else if(sequence[index] == RIGHT) {
+    else if(sequence[pathIndex] == RIGHT) {
       switch(pickupStateIndex) {
         case 0:
           rightClawArm.write(R_DOWN_POS);
           if(delayState(400)) pickupStateIndex++;
           break;
         case 1:
-          if(rightClawSensor < PERSON_CLOSE) {
+          if(readRightClaw() < PERSON_CLOSE) {
             rightClaw.write(R_CLOSE);
             if(delayState(100)) pickupStateIndex++;
           }
@@ -333,14 +344,14 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
 
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
-  if(doTurnSequence(redPath, redIndex, redSteps) redIndex++;
+  if(doTurnSequence(redPath, redIndex, redSteps)) redIndex++;
   doPickupSequence(redPickup, redIndex);
   return false;
 }
 
 bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
-  if(doTurnSequence(neutralPath, neutralIndex, neutralSteps) neutralIndex++;
+  if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
   doPickupSequence(neutralPickup, neutralIndex);
   return false;
 }
@@ -355,14 +366,16 @@ bool depositPeopleState(){
   }
   return false;
 }
+bool doneState() {
 
+}
 void loop() {
   static int state = 0;
   readLine();
   switch(state)
   {
     case 0:
-      if(pickMissionState())  state++;
+      if(waitState())  state++;
       break;
     case 1:
       if(followRedPathState())  state++;
@@ -377,7 +390,7 @@ void loop() {
       break;
     case 4:
       if(depositPeopleState()) state++;
-      break;d
+      break;
   default:
       if(doneState()) state = 0;
       break;
