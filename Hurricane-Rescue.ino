@@ -1,6 +1,7 @@
 #include <Arduino.h>
-#include <Servo.h>
-#include "sorter.h"
+//#include <Servo.h>
+#include "C:\Users\mathc\Documents\Arduino\hardware\Arduino_STM32\STM32F1\libraries\Servo\src\Servo.h"                
+
 #include "new_pins.h"
 #include "constants.h"
 #include "missions.h"
@@ -13,12 +14,14 @@ int amountSeen     = 0;
 
 bool turning = false;
 bool pickingUp = false;
-
-char redPath[40];
+/////////////////////////////////
+char redPath[40] = {F, R};
+int redSteps = 2;
+/////////////////////////////////
 char neutralPath[40];
 char redPickup[40];
 char neutralPickup[40];
-int redSteps;
+
 int neutralSteps;
 int missionNum = 1;
 
@@ -38,15 +41,15 @@ void setup() {
   pinMode(WHEEL_DIR_RB, OUTPUT);
   pinMode(WHEEL_DIR_RF, OUTPUT);
 
-  pinMode(LEDY, OUTPUT);
-  pinMode(LEDG, OUTPUT);
+  //pinMode(LEDY, OUTPUT);
+  //pinMode(LEDG, OUTPUT);
 
   pinMode(WHEEL_SPEED_L, OUTPUT);
   pinMode(WHEEL_SPEED_R, OUTPUT);
 
-  pinMode(WHEEL_STBY, OUTPUT);
+  //pinMode(WHEEL_STBY, OUTPUT);
 
-  pinMode(BUTTON1, INPUT_PULLUP);
+  pinMode(BUTTON_1, INPUT_PULLUP);
 
   /*
    * The following output configurations set both motors
@@ -59,7 +62,7 @@ void setup() {
    *  - Issues here the right wheel is only spinning backwards
    */
   writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
-  digitalWrite(WHEEL_STBY  , HIGH);
+  //digitalWrite(WHEEL_STBY  , HIGH);
 
   Serial.begin(115200);
  
@@ -91,18 +94,18 @@ void readLine() {
   }
 }
 
-int readFrontRight(){//gets data val from right infraread sensor IMH
-  return analogRead(FRONT_RIGHT_SENSOR);
+/*int readFrontRight(){//gets data val from right infraread sensor IMH
+  return analogRead(FRONT_R_SENSOR);
 }
 int readFrontLeft(){//gets data val from left infraread sensor IMH
-  return analogRead(FRONT_LEFT_SENSOR);
+  return analogRead(FRONT_L_SENSOR);
 }
 int readRightClaw() {
-   return analogRead(RIGHT_CLAW_SENSOR);
+   return analogRead(R_CLAW_SENSOR);
 }
 int readLeftClaw() {
-   return analogRead(LEFT_CLAW_SENSOR);
-}
+   return analogRead(L_CLAW_SENSOR);
+}*/
 bool twoConsecutiveAtMiddle() {
   return twoConsecutive() && firstLineIndex >= TARGET_INDEX;
 }
@@ -139,30 +142,38 @@ void writeToWheels(int ls, int rs) {
 }
 
 bool lineFollow(int ts, int strictness) {
+  static bool seenLine = false;
   int offset = firstLineIndex - TARGET_INDEX;
   int rightSpeed = ts - offset*strictness;
   int leftSpeed = ts + offset*strictness;
   writeToWheels(leftSpeed, rightSpeed);
 
   // Return true if the sensors can see a fork
-  if(readFrontRight() < 30) {
+  /*if(readFrontRight() < 30) {
     atWall = true;
     return true;
+  }*/
+  if(amountSeen > TURN_AMOUNT) seenLine = true;
+  if(seenLine) {
+    if(delayState(300)) {
+      seenLine = false;
+      return true;
+    }
   }
-  return amountSeen > TURN_AMOUNT;
+  //return amountSeen > TURN_AMOUNT;
 }
 
 bool turn(int spd, char dir) {
   static int lineCount = 0;
-  if(dir == LEFT){
+  if(dir == L){
     writeToWheels(-spd, spd);
-  }else if(dir == RIGHT){
+  }else if(dir == R){
     writeToWheels(spd, -spd);
-  }else if(dir == FORWARD) {
+  }else if(dir == F) {
     writeToWheels(spd, spd);
   }
 
-  if(dir == BACK && !atWall) {
+  /*if(dir == B && !atWall) {
     if(twoConsecutiveAtMiddle()) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
       lineCount++;
     }
@@ -170,7 +181,7 @@ bool turn(int spd, char dir) {
       lineCount = 0;
       return true;
     }
-  }
+  }*/
   // Return true if the robot is back centered on the line
   else return twoConsecutiveAtMiddle();
 }
@@ -188,7 +199,7 @@ bool delayState(int ms) {
 }
 // State 0
 //  Waits until the button on board is pushed. When it is pushed then go to next state
-bool waitState() {
+/*bool waitState() {
   writeToWheels(0, 0);
   if(digitalRead(BUTTON1) == LOW) {
     if(mission == 1) {
@@ -242,7 +253,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
       nextSquare = false;
       return;
     }
-    else if(sequence[pathIndex] == LEFT) {
+    else if(sequence[pathIndex] == L) {
       switch(pickupStateIndex) {
         case 0:
           leftClawArm.write(L_DOWN_POS);
@@ -272,7 +283,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
           break;
       }
     }
-    else if(sequence[pathIndex] == RIGHT) {
+    else if(sequence[pathIndex] == R) {
       switch(pickupStateIndex) {
         case 0:
           rightClawArm.write(R_DOWN_POS);
@@ -304,7 +315,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
     }
   }
   return;
-}
+}*/
 
 
 bool doTurnSequence(const char sequence[], int index, int maxSteps) {
@@ -322,7 +333,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
       }
     } else {
       /*if(index + 1 < maxSteps){
-        if(sequence[index + 1] == FORWARD) {
+        if(sequence[index + 1] == F) {
           turning = lineFollow(FULL_SPEED, 50);
           return false;
         }
@@ -336,11 +347,11 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
   if(doTurnSequence(redPath, redIndex, redSteps)) redIndex++;
-  doPickupSequence(redPickup, redIndex);
+  //doPickupSequence(redPickup, redIndex);
   return false;
 }
 
-bool followNeutralPathState() {
+/*bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
   if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
   doPickupSequence(neutralPickup, neutralIndex);
@@ -356,7 +367,7 @@ bool depositPeopleState(){
     return true;
   }
   return false;
-}
+}*/
 bool doneState() {
 
 }
@@ -366,13 +377,13 @@ void loop() {
   switch(state)
   {
     case 0:
-      if(waitState())  state++;
+      if(digitalRead(BUTTON_1) == LOW)  state++;
       break;
     case 1:
-      if(followRedPathState())  state++;
+      if(followRedPathState())  state = 0;
 
       break;
-    case 2:
+    /*case 2:
       if(depositPeopleState())  state++;
       break;
     case 3:
@@ -381,7 +392,7 @@ void loop() {
       break;
     case 4:
       if(depositPeopleState()) state++;
-      break;
+      break;*/
   default:
       if(doneState()) state = 0;
       break;

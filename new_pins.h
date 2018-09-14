@@ -1,6 +1,6 @@
 // Buttons
-const int BUTTON1 = PB4;//stopbutton
-const int BUTTON2 = PB5;//gobutton
+const int BUTTON_2 = PB4;//stopbutton
+const int BUTTON_1 = PB5;//gobutton
 
 // Wheels
 const int WHEEL_DIR_LB = PB14;//BIN1
