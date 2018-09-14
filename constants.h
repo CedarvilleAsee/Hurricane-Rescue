@@ -39,6 +39,7 @@ const int R_DOWN_POS = 50;
 const int L_UP_POS = 100;
 const int L_DOWN_POS = 50;
 
+const int WALL_CLOSE = 30;
 
 
 #endif

@@ -18,6 +18,8 @@ int LINE_SENSOR[] = {PA5, PA6, PA7, PA3, PA15, PB10, PB11, PA11};
 
 //Analog
 
+const int FRONT_R_SENSOR = PA2; //or PA4?
+
 // Sorter light
 //const int SENSOR_A   = 86;
 //const int SENSOR_CLK = 87;

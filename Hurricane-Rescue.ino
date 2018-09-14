@@ -21,7 +21,7 @@ int redSteps = 2;
 char neutralPath[40];
 char redPickup[40];
 char neutralPickup[40];
-
+bool atWall = false;
 int neutralSteps;
 int missionNum = 1;
 
@@ -94,10 +94,10 @@ void readLine() {
   }
 }
 
-/*int readFrontRight(){//gets data val from right infraread sensor IMH
+/*int readFrontRight(){
   return analogRead(FRONT_R_SENSOR);
 }
-int readFrontLeft(){//gets data val from left infraread sensor IMH
+int readFrontLeft(){
   return analogRead(FRONT_L_SENSOR);
 }
 int readRightClaw() {
@@ -107,9 +107,12 @@ int readLeftClaw() {
    return analogRead(L_CLAW_SENSOR);
 }*/
 bool twoConsecutiveAtMiddle() {
-  return twoConsecutive() && firstLineIndex >= TARGET_INDEX;
+  return twoConsecutive() && firstLineIndex >= TARGET_INDEX /*&& lastLineIndex <= TARGET_INDEX + 1*/;
 }
 
+/*bool twoConsecutiveAtMiddle() {
+  return sensors[3] == HIGH && sensors[4] == HIGH;
+}*/
 
 bool twoConsecutive() {
   int lowCount = 0;
@@ -149,7 +152,7 @@ bool lineFollow(int ts, int strictness) {
   writeToWheels(leftSpeed, rightSpeed);
 
   // Return true if the sensors can see a fork
-  /*if(readFrontRight() < 30) {
+  /*if(readFrontRight() < WALL_CLOSE) {
     atWall = true;
     return true;
   }*/
@@ -165,7 +168,7 @@ bool lineFollow(int ts, int strictness) {
 
 bool turn(int spd, char dir) {
   static int lineCount = 0;
-  if(dir == L){
+  if(dir == L || atWall){
     writeToWheels(-spd, spd);
   }else if(dir == R){
     writeToWheels(spd, -spd);
@@ -173,7 +176,7 @@ bool turn(int spd, char dir) {
     writeToWheels(spd, spd);
   }
 
-  if(dir == B/* && !atWall*/) {
+  if(dir == B && !atWall) {
     if(twoConsecutiveAtMiddle()) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
       lineCount++;
     }
@@ -181,9 +184,15 @@ bool turn(int spd, char dir) {
       lineCount = 0;
       return true;
     }
-  }*/
+  }
   // Return true if the robot is back centered on the line
-  else return twoConsecutiveAtMiddle();
+  else {
+    if(twoConsecutiveAtMiddle()) {
+      atWall = false;
+      return true;
+    }
+    return false;
+  }
 }
 
 bool delayState(int ms) {
@@ -242,15 +251,15 @@ bool delayState(int ms) {
 
 void doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
-  static bool nextSquare = true;
+  static bool atatNextSquare = true;
   static int prevIndex = pathIndex;
-  if(prevIndex != pathIndex) {
+  if(prevIndex != pathIndex) { // when robot reaches intersection or wall // remember this when turning, just in case there is a person getting knocked off 
     prevIndex = pathIndex;
-    nextSquare = true;
+    atatNextSquare = true;
   }
-  if(nextSquare){
+  if(atatNextSquare){
     if(sequence[pathIndex] == EMPTY) {
-      nextSquare = false;
+      atatNextSquare = false;
       return;
     }
     else if(sequence[pathIndex] == L) {
@@ -273,7 +282,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
           leftClaw.write(L_OPEN);
           if(delayState(100)) {
             pickupStateIndex = 0;
-            nextSquare = false;
+            atatNextSquare = false;
             return;
           }
           break;
@@ -303,7 +312,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
           rightClaw.write(R_OPEN);
           if(delayState(100)) {
             pickupStateIndex = 0;
-            nextSquare = false;
+            atNextSquare = false;
             return ;
           }
           break;
