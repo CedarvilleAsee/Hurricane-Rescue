@@ -13,13 +13,7 @@ int amountSeen     = 0;
 
 int mission = 1; // this will be changed by swtiches
 //temp
-Servo leftClawArm;
-Servo rightClawArm;
-Servo leftClaw;
-Servo rightClaw;
-Servo dump;
 
-bool atWall = false;
 bool turning = false;
 bool pickingUp = false;
 

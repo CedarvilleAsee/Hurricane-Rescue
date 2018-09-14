@@ -9,8 +9,8 @@ const int BUTTON2 = 32;
 // Wheels
 const int WHEEL_DIR_LB = 26;
 const int WHEEL_DIR_LF = 28;
-const int WHEEL_DIR_RB = 34;
-const int WHEEL_DIR_RF = 36;
+const int WHEEL_DIR_RB = 34;//AIN2
+const int WHEEL_DIR_RF = 36;//AIN1
 
 const int WHEEL_SPEED_L = 7;
 const int WHEEL_SPEED_R = 8;
