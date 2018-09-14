@@ -173,7 +173,7 @@ bool turn(int spd, char dir) {
     writeToWheels(spd, spd);
   }
 
-  /*if(dir == B && !atWall) {
+  if(dir == B/* && !atWall*/) {
     if(twoConsecutiveAtMiddle()) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
       lineCount++;
     }
