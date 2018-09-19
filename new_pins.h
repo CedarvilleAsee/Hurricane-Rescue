@@ -8,10 +8,10 @@ const int WHEEL_DIR_LF = PB15;//BIN2
 const int WHEEL_DIR_RB = PB13;//AIN1
 const int WHEEL_DIR_RF = PB12;//AIN2
 
-const int WHEEL_SPEED_L = 7; //PWMB
-const int WHEEL_SPEED_R = 8; //PWMA
+const int WHEEL_SPEED_L = PB1; //PWMB
+const int WHEEL_SPEED_R = PB0; //PWMA
 
-const int WHEEL_STBY = 33;
+//const int WHEEL_STBY = 33;
 
 // Line sensors
 int LINE_SENSOR[] = {PA5, PA6, PA7, PA3, PA15, PB10, PB11, PA11};

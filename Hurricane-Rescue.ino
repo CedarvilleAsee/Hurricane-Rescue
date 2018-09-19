@@ -15,8 +15,8 @@ int amountSeen     = 0;
 bool turning = false;
 bool pickingUp = false;
 /////////////////////////////////
-char redPath[40] = {F, R};
-int redSteps = 2;
+char redPath[40] = {F, R, L};
+int redSteps = 3;
 /////////////////////////////////
 char neutralPath[40];
 char redPickup[40];
@@ -57,14 +57,11 @@ void setup() {
    * backwards movement, so the wheels should be permanently
    * forward.
    *
-   * - Note: when the new boards are installed, this code will be
-   *        changed because the board is going to tie these to high
-   *  - Issues here the right wheel is only spinning backwards
    */
   writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
   //digitalWrite(WHEEL_STBY  , HIGH);
 
-  Serial.begin(115200);
+  //Serial.begin(115200);
  
 }
 
@@ -390,17 +387,18 @@ void loop() {
       break;
     case 1:
       if(followRedPathState())  state = 0;
-
       break;
     /*case 2:
       if(depositPeopleState())  state++;
       break;
-    case 3:
+    case 3: if(turnAroundState()) state++;
+      break;
+    case 4:
       if(followNeutralPathState()) state++;
       ;
       break;
-    case 4:
-      if(depositPeopleState()) state++;
+    case 5:
+      if(depositPeopleState()) state = 0;
       break;*/
   default:
       if(doneState()) state = 0;

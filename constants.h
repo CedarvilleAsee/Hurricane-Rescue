@@ -10,11 +10,14 @@ const int FULL_SPEED = 255;
 //Joel constants
 const int TARGET_INDEX = 3;
 const int TURN_AMOUNT  = 3;
+
+//direction constants
 const char L = 'l';
 const char R = 'r';
 const char F = 'f';
 const char B = 'b';
 const char EMPTY = '0';
+
 // Dasch constants
 const int BLUETOOTH_LIMITER = 4000;
 const bool WHEEL_FORWARDS   = true;
