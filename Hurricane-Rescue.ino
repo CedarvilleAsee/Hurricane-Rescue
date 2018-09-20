@@ -1,17 +1,19 @@
 #include <Arduino.h>
-//#include <Servo.h>
-#include "C:\Users\mathc\Documents\Arduino\hardware\Arduino_STM32\STM32F1\libraries\Servo\src\Servo.h"                
-
+#include <Servo.h>
 #include "new_pins.h"
 #include "constants.h"
 #include "missions.h"
+#include "PT6961.h"
 
 
 int sensors[8]     = {0};
 int firstLineIndex = -1;
 int lastLineIndex  = -1;
 int amountSeen     = 0;
-
+Servo dump;
+Servo arm;
+Servo eject;
+Servo claw;
 bool turning = false;
 bool pickingUp = false;
 /////////////////////////////////
@@ -28,8 +30,12 @@ int missionNum = 1;
 int redIndex = 0;
 int neutralIndex = 0;
 
-void setup() {
 
+PT6961 display(DIN, CLOCK, CS);
+
+void setup() {
+  display.initDisplay();
+  display.sendNum(1234, 1);
   // initialize line sensors
   for(int i = 0; i < 8; i++) {
     pinMode(LINE_SENSOR[i], INPUT);
@@ -62,7 +68,15 @@ void setup() {
   //digitalWrite(WHEEL_STBY  , HIGH);
 
   //Serial.begin(115200);
- 
+  dump.attach(DUMP_SERVO);//dump bin
+  dump.write(15);//to closed position
+  arm.attach(ARM_SERVO);
+  arm.write(100);
+  claw.attach(CLAW_SERVO);
+  claw.write(1);
+  eject.attach(EJECT_SERVO);
+  eject.write(115);
+  
 }
 
 
@@ -75,6 +89,7 @@ void testWheel(bool wheel, int ts) {
 
 // Populates the sensors[] variable so that we know amountSeen
 void readLine() {
+  int sensorCounter = 0;
   amountSeen = 0;
   lastLineIndex = -1;
   for(int i = 7; i >= 0; --i) {
@@ -89,6 +104,12 @@ void readLine() {
       firstLineIndex = i;
     }
   }
+  
+  for (int i = 0; i < 8; i++ ){
+    sensorCounter += sensors[i]<<i;
+  }
+  
+  display.sendNum(sensorCounter, 0);
 }
 
 /*int readFrontRight(){
@@ -142,10 +163,10 @@ void writeToWheels(int ls, int rs) {
 }
 
 bool lineFollow(int ts, int strictness) {
-  static bool seenLine = false;
+  //static bool seenLine = false;
   int offset = firstLineIndex - TARGET_INDEX;
-  int rightSpeed = ts - offset*strictness;
-  int leftSpeed = ts + offset*strictness;
+  int rightSpeed = ts + offset*strictness;
+  int leftSpeed = ts - offset*strictness;
   writeToWheels(leftSpeed, rightSpeed);
 
   // Return true if the sensors can see a fork
@@ -153,15 +174,17 @@ bool lineFollow(int ts, int strictness) {
     atWall = true;
     return true;
   }*/
-  if(amountSeen > TURN_AMOUNT) seenLine = true;
+  /*if(amountSeen > TURN_AMOUNT) seenLine = true;
   if(seenLine) {
     if(delayState(300)) {
       seenLine = false;
       return true;
     }
-  }
-  //return amountSeen > TURN_AMOUNT;
+  }*/
+  return amountSeen > TURN_AMOUNT;
 }
+
+
 
 bool turn(int spd, char dir) {
   static int lineCount = 0;
@@ -323,6 +346,9 @@ void doPickupSequence(const char sequence[], int pathIndex) {
   return;
 }*/
 
+bool turnAroundState() {
+  return turn(HALF_SPEED, B);
+}
 
 bool doTurnSequence(const char sequence[], int index, int maxSteps) {
   index++; // should be acting on next instruction, not current
@@ -380,29 +406,35 @@ bool doneState() {
 void loop() {
   static int state = 0;
   readLine();
-  switch(state)
+  //writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
+  //writeToWheels(50, 50);
+  lineFollow(50, 10);
+  /*switch(state)
   {
     case 0:
       if(digitalRead(BUTTON_1) == LOW)  state++;
       break;
     case 1:
+      if(lineFollow(10, 50)) state++;
+      //if(digitalRead(BUTTON_2) == LOW) state++;
+      break;
+    /*case 1:
       if(followRedPathState())  state = 0;
       break;
-    /*case 2:
+    case 2:
       if(depositPeopleState())  state++;
       break;
     case 3: if(turnAroundState()) state++;
       break;
     case 4:
       if(followNeutralPathState()) state++;
-      ;
       break;
     case 5:
       if(depositPeopleState()) state = 0;
-      break;*/
+      break;
   default:
       if(doneState()) state = 0;
       break;
-  }
-
+  }*/
+  
 }
