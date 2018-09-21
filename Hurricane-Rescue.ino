@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "missions.h"
 #include "PT6961.h"
-
+//
 
 int sensors[8]     = {0};
 int firstLineIndex = -1;
@@ -17,8 +17,8 @@ Servo claw;
 bool turning = false;
 bool pickingUp = false;
 /////////////////////////////////
-char redPath[40] = {F, R, L};
-int redSteps = 3;
+char redPath[40] = {F, F, R, F, L, F};
+int redSteps = 6;
 /////////////////////////////////
 char neutralPath[40];
 char redPickup[40];
@@ -104,12 +104,13 @@ void readLine() {
       firstLineIndex = i;
     }
   }
+  //display.sendLineReading(sensors);
   
   for (int i = 0; i < 8; i++ ){
     sensorCounter += sensors[i]<<i;
   }
-  
   display.sendNum(sensorCounter, 0);
+  //display.sendNum(amountSeen, 0);
 }
 
 /*int readFrontRight(){
@@ -158,12 +159,29 @@ void writeWheelDirection(bool ldir, bool rdir) {
 
 
 void writeToWheels(int ls, int rs) {
+  if(ls < 0) {
+    digitalWrite(WHEEL_DIR_LF, false); //right backwards
+    digitalWrite(WHEEL_DIR_LB, true);
+  }
+  else {
+    digitalWrite(WHEEL_DIR_LF, true); //right forwards
+    digitalWrite(WHEEL_DIR_LB, false);
+  }
+  if(rs < 0) {
+    digitalWrite(WHEEL_DIR_RF, false); //right backwards
+    digitalWrite(WHEEL_DIR_RB, true);
+  }
+  else {
+    digitalWrite(WHEEL_DIR_RF, true); //right forwards
+    digitalWrite(WHEEL_DIR_RB, false);
+  }
+  
   analogWrite(WHEEL_SPEED_L, abs(ls));
   analogWrite(WHEEL_SPEED_R, abs(rs));
 }
 
 bool lineFollow(int ts, int strictness) {
-  //static bool seenLine = false;
+  static bool seenLine = false;
   int offset = firstLineIndex - TARGET_INDEX;
   int rightSpeed = ts + offset*strictness;
   int leftSpeed = ts - offset*strictness;
@@ -174,29 +192,34 @@ bool lineFollow(int ts, int strictness) {
     atWall = true;
     return true;
   }*/
-  /*if(amountSeen > TURN_AMOUNT) seenLine = true;
+  if(amountSeen >= TURN_AMOUNT) seenLine = true;
   if(seenLine) {
-    if(delayState(300)) {
+    if(delayState(1000)) {
       seenLine = false;
       return true;
     }
-  }*/
-  return amountSeen > TURN_AMOUNT;
+  }
+  //return amountSeen > TURN_AMOUNT;
+  return false;
 }
 
 
 
 bool turn(int spd, char dir) {
   static int lineCount = 0;
+  static bool gotOffLine = false;
+  if(dir == F) return true;
+
+  
   if(dir == L || atWall){
     writeToWheels(-spd, spd);
   }else if(dir == R){
     writeToWheels(spd, -spd);
-  }else if(dir == F) {
-    writeToWheels(spd, spd);
   }
 
-  if(dir == B && !atWall) {
+  if(amountSeen == 0) gotOffLine = true;
+
+  /*if(dir == B && !atWall) {
     if(twoConsecutiveAtMiddle()) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
       lineCount++;
     }
@@ -204,15 +227,16 @@ bool turn(int spd, char dir) {
       lineCount = 0;
       return true;
     }
-  }
+  }*/
   // Return true if the robot is back centered on the line
-  else {
-    if(twoConsecutiveAtMiddle()) {
+  
+    if(gotOffLine && twoConsecutiveAtMiddle()) {
       atWall = false;
+      gotOffLine = false;
       return true;
     }
     return false;
-  }
+  
 }
 
 bool delayState(int ms) {
@@ -353,7 +377,7 @@ bool turnAroundState() {
 bool doTurnSequence(const char sequence[], int index, int maxSteps) {
   index++; // should be acting on next instruction, not current
   if(index == maxSteps) {
-    if(lineFollow(HALF_SPEED, 50)){
+    if(lineFollow(HALF_SPEED, 10)){
       return true;
     }
   }
@@ -370,7 +394,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
           return false;
         }
       } //should work, but not tested with person*/
-      turning = lineFollow(HALF_SPEED, 50);
+      turning = lineFollow(HALF_SPEED, 10);
     }
   }
   return false;
@@ -405,19 +429,19 @@ bool doneState() {
 }
 void loop() {
   static int state = 0;
+  static bool test = false;
   readLine();
-  //writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
-  //writeToWheels(50, 50);
-  lineFollow(50, 10);
-  /*switch(state)
-  {
+  
+  if(digitalRead(BUTTON_2) == LOW) state = 0;
+  switch(state) {
     case 0:
       if(digitalRead(BUTTON_1) == LOW)  state++;
+      writeToWheels(0, 0);
       break;
-    case 1:
-      if(lineFollow(10, 50)) state++;
-      //if(digitalRead(BUTTON_2) == LOW) state++;
+    case 1: 
+      if(followRedPathState()) state = 0;
       break;
+            
     /*case 1:
       if(followRedPathState())  state = 0;
       break;
@@ -434,7 +458,7 @@ void loop() {
       break;
   default:
       if(doneState()) state = 0;
-      break;
-  }*/
+      break;*/
+  }
   
 }

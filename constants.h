@@ -3,9 +3,9 @@
 #define CONSTANTS
 
 //speed constants
-const int SLOW_SPEED = 70;
-const int HALF_SPEED = 170;
-const int FULL_SPEED = 255;
+const int SLOW_SPEED = 50;
+const int HALF_SPEED = 50;
+const int FULL_SPEED = 50;
 
 //Joel constants
 const int TARGET_INDEX = 3;
