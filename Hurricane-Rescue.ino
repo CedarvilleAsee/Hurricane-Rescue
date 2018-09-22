@@ -17,8 +17,8 @@ Servo claw;
 bool turning = false;
 bool pickingUp = false;
 /////////////////////////////////
-char redPath[40] = {F, F, B, F};
-int redSteps = 4;
+char redPath[40] = {F, F, B, B, B};
+int redSteps = 5;
 /////////////////////////////////
 char neutralPath[40];
 char redPickup[40];
@@ -191,11 +191,15 @@ bool lineFollow(int ts, int strictness) {
     writeToWheels(ts, ts);
   }
   else {
-    int offset = firstLineIndex - TARGET_INDEX;
+    /*int offset = firstLineIndex - TARGET_INDEX;
     int rightSpeed = ts + offset*strictness;
-    int leftSpeed = ts - offset*strictness;
+    int leftSpeed = ts - offset*strictness;*/
+    int rightSpeed = ts + (lastLineIndex - 4)*strictness;
+    int leftSpeed = ts - (firstLineIndex - 3)*strictness;
     writeToWheels(leftSpeed, rightSpeed);
   }
+
+    
 
   // Return true if the sensors can see a fork
   if(readFrontSensor() < WALL_CLOSE) {
@@ -227,7 +231,7 @@ bool turn(int spd, char dir) {
   if(amountSeen == 0) gotOffLine = true;
 
   if(dir == B && !atWall) {
-    writeToWheels(-spd, spd);
+    writeToWheels(-(spd), spd);
     if(twoConsecutiveAtMiddle() && gotOffLine) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
       lineCount++;
       gotOffLine = false;

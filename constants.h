@@ -8,7 +8,7 @@ const int HALF_SPEED = 50;
 const int FULL_SPEED = 50;
 
 //Joel constants
-const int TARGET_INDEX = 3;
+const int TARGET_INDEX = 4;
 const int TURN_AMOUNT  = 3;
 
 
@@ -43,7 +43,7 @@ const int R_DOWN_POS = 50;
 const int L_UP_POS = 100;
 const int L_DOWN_POS = 50;
 
-const int WALL_CLOSE = 2500;
+const int WALL_CLOSE = 300;
 const int AT_FORK = 2500;
 
 
