@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "missions.h"
 #include "PT6961.h"
-//
+
 
 int sensors[8]     = {0};
 int firstLineIndex = -1;
@@ -182,10 +182,15 @@ void writeToWheels(int ls, int rs) {
 
 bool lineFollow(int ts, int strictness) {
   static bool seenLine = false;
-  int offset = firstLineIndex - TARGET_INDEX;
-  int rightSpeed = ts + offset*strictness;
-  int leftSpeed = ts - offset*strictness;
-  writeToWheels(leftSpeed, rightSpeed);
+  if(seenLine){
+    writeToWheels(ts, ts);
+  }
+  else {
+    int offset = firstLineIndex - TARGET_INDEX;
+    int rightSpeed = ts + offset*strictness;
+    int leftSpeed = ts - offset*strictness;
+    writeToWheels(leftSpeed, rightSpeed);
+  }
 
   // Return true if the sensors can see a fork
   /*if(readFrontRight() < WALL_CLOSE) {
