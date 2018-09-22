@@ -11,6 +11,7 @@ const int FULL_SPEED = 50;
 const int TARGET_INDEX = 3;
 const int TURN_AMOUNT  = 3;
 
+
 //direction constants
 const char L = 'l';
 const char R = 'r';
@@ -42,7 +43,8 @@ const int R_DOWN_POS = 50;
 const int L_UP_POS = 100;
 const int L_DOWN_POS = 50;
 
-const int WALL_CLOSE = 30;
+const int WALL_CLOSE = 2500;
+const int AT_FORK = 2500;
 
 
 #endif

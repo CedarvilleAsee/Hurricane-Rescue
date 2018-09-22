@@ -17,8 +17,8 @@ Servo claw;
 bool turning = false;
 bool pickingUp = false;
 /////////////////////////////////
-char redPath[40] = {F, F, R, F, L, F};
-int redSteps = 6;
+char redPath[40] = {F, F, B, F};
+int redSteps = 4;
 /////////////////////////////////
 char neutralPath[40];
 char redPickup[40];
@@ -41,6 +41,9 @@ void setup() {
     pinMode(LINE_SENSOR[i], INPUT);
   }
 
+  pinMode(FRONT_SENSOR, INPUT);
+  pinMode(FORK_SENSOR, INPUT);
+  
  // initialize motor controllers
   pinMode(WHEEL_DIR_LB, OUTPUT);
   pinMode(WHEEL_DIR_LF, OUTPUT);
@@ -76,7 +79,7 @@ void setup() {
   claw.write(1);
   eject.attach(EJECT_SERVO);
   eject.write(115);
-  
+
 }
 
 
@@ -105,7 +108,7 @@ void readLine() {
     }
   }
   //display.sendLineReading(sensors);
-  
+
   for (int i = 0; i < 8; i++ ){
     sensorCounter += sensors[i]<<i;
   }
@@ -113,13 +116,14 @@ void readLine() {
   //display.sendNum(amountSeen, 0);
 }
 
-/*int readFrontRight(){
-  return analogRead(FRONT_R_SENSOR);
+int readFrontSensor(){
+  return analogRead(FRONT_SENSOR);
 }
-int readFrontLeft(){
-  return analogRead(FRONT_L_SENSOR);
+int readForkSensor(){
+  return analogRead(FORK_SENSOR);
 }
-int readRightClaw() {
+
+/*int readRightClaw() {
    return analogRead(R_CLAW_SENSOR);
 }
 int readLeftClaw() {
@@ -175,14 +179,15 @@ void writeToWheels(int ls, int rs) {
     digitalWrite(WHEEL_DIR_RF, true); //right forwards
     digitalWrite(WHEEL_DIR_RB, false);
   }
-  
+
   analogWrite(WHEEL_SPEED_L, abs(ls));
   analogWrite(WHEEL_SPEED_R, abs(rs));
 }
 
 bool lineFollow(int ts, int strictness) {
-  static bool seenLine = false;
-  if(seenLine){
+  static bool frontPassed = false;
+  if(amountSeen >= TURN_AMOUNT){
+    frontPassed = true;
     writeToWheels(ts, ts);
   }
   else {
@@ -193,18 +198,15 @@ bool lineFollow(int ts, int strictness) {
   }
 
   // Return true if the sensors can see a fork
-  /*if(readFrontRight() < WALL_CLOSE) {
+  if(readFrontSensor() < WALL_CLOSE) {
     atWall = true;
     return true;
-  }*/
-  if(amountSeen >= TURN_AMOUNT) seenLine = true;
-  if(seenLine) {
-    if(delayState(1000)) {
-      seenLine = false;
-      return true;
-    }
   }
-  //return amountSeen > TURN_AMOUNT;
+  if(readForkSensor() > AT_FORK && frontPassed) {
+    frontPassed = false;
+    return true;
+  }
+
   return false;
 }
 
@@ -215,7 +217,7 @@ bool turn(int spd, char dir) {
   static bool gotOffLine = false;
   if(dir == F) return true;
 
-  
+
   if(dir == L || atWall){
     writeToWheels(-spd, spd);
   }else if(dir == R){
@@ -224,24 +226,26 @@ bool turn(int spd, char dir) {
 
   if(amountSeen == 0) gotOffLine = true;
 
-  /*if(dir == B && !atWall) {
-    if(twoConsecutiveAtMiddle()) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
+  if(dir == B && !atWall) {
+    writeToWheels(-spd, spd);
+    if(twoConsecutiveAtMiddle() && gotOffLine) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
       lineCount++;
+      gotOffLine = false;
     }
     if(lineCount == 2){
       lineCount = 0;
       return true;
     }
-  }*/
+  }
   // Return true if the robot is back centered on the line
-  
+
     if(gotOffLine && twoConsecutiveAtMiddle()) {
       atWall = false;
       gotOffLine = false;
       return true;
     }
     return false;
-  
+
 }
 
 bool delayState(int ms) {
@@ -302,7 +306,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
   static bool atatNextSquare = true;
   static int prevIndex = pathIndex;
-  if(prevIndex != pathIndex) { // when robot reaches intersection or wall // remember this when turning, just in case there is a person getting knocked off 
+  if(prevIndex != pathIndex) { // when robot reaches intersection or wall // remember this when turning, just in case there is a person getting knocked off
     prevIndex = pathIndex;
     atatNextSquare = true;
   }
@@ -389,8 +393,8 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
   else {
     if(turning) {
       if(turn(HALF_SPEED, sequence[index])) {
-        turning = false;
-        return true;
+          turning = false;
+          return true;
       }
     } else {
       /*if(index + 1 < maxSteps){
@@ -436,17 +440,17 @@ void loop() {
   static int state = 0;
   static bool test = false;
   readLine();
-  
   if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
     case 0:
       if(digitalRead(BUTTON_1) == LOW)  state++;
       writeToWheels(0, 0);
       break;
-    case 1: 
+    case 1:
       if(followRedPathState()) state = 0;
+      //lineFollow(HALF_SPEED, 10);
       break;
-            
+
     /*case 1:
       if(followRedPathState())  state = 0;
       break;
@@ -465,5 +469,5 @@ void loop() {
       if(doneState()) state = 0;
       break;*/
   }
-  
+
 }

@@ -29,7 +29,8 @@ const int WHEEL_SPEED_R = PB0; //PWMA
 int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//least to most
 //Analog
 
-const int FRONT_R_SENSOR = PA2; //or PA4?
+const int FRONT_SENSOR = PA0;
+const int FORK_SENSOR = PA2; //or PA4?
 
 // Sorter light
 //const int SENSOR_A   = 86;
