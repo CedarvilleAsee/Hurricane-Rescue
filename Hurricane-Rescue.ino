@@ -5,6 +5,7 @@
 #include "missions.h"
 #include "PT6961.h"
 
+/***********************Globals**************************/
 
 int sensors[8]     = {0};
 int firstLineIndex = -1;
@@ -30,8 +31,9 @@ int missionNum = 1;
 int redIndex = 0;
 int neutralIndex = 0;
 
-
 PT6961 display(DIN, CLOCK, CS);
+
+/***********************Setup***************************/
 
 void setup() {
   display.initDisplay();
@@ -60,17 +62,9 @@ void setup() {
 
   pinMode(BUTTON_1, INPUT_PULLUP);
 
-  /*
-   * The following output configurations set both motors
-   * to move forward. The two Robot solution doesn't require
-   * backwards movement, so the wheels should be permanently
-   * forward.
-   *
-   */
-  writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
-  //digitalWrite(WHEEL_STBY  , HIGH);
 
-  //Serial.begin(115200);
+  writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
+
   dump.attach(DUMP_SERVO);//dump bin
   dump.write(15);//to closed position
   arm.attach(ARM_SERVO);
@@ -82,7 +76,16 @@ void setup() {
 
 }
 
-/*******************************General Functions********************/
+/*****************************General Functions*******************/
+int readFrontSensor() {
+   return analogRead(FRONT_SENSOR);
+}
+int readForkSensor() {
+   return analogRead(FORK_SENSOR);
+}
+
+/*******************************Line Following********************/
+
 
 // Populates the sensors[] variable so that we know amountSeen
 void readLine() {
@@ -110,12 +113,7 @@ void readLine() {
   //display.sendNum(amountSeen, 0);
 }
 
-int readFrontSensor(){
-  return analogRead(FRONT_SENSOR);
-}
-int readForkSensor(){
-  return analogRead(FORK_SENSOR);
-}
+
 
 /*int readRightClaw() {
    return analogRead(R_CLAW_SENSOR);
@@ -273,7 +271,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
    return false;
 }
 
-/*********************States******************************/
+/*******************************States******************************/
 
 bool delayState(int ms) {
   static int milliseconds = -1;
@@ -288,9 +286,9 @@ bool delayState(int ms) {
 }
 // State 0
 //  Waits until the button on board is pushed, go to next state
-/*bool waitState() {
+bool waitState() {
   writeToWheels(0, 0);
-  if(digitalRead(BUTTON1) == LOW) {
+  if(digitalRead(BUTTON_1) == LOW) {/*
     if(mission == 1) {
       strcpy(redPath, RED_MISSION_1);
       strcpy(neutralPath, NEUTRAL_MISSION_1);
@@ -322,14 +320,14 @@ bool delayState(int ms) {
       strcpy(neutralPickup, NEUTRAL_PICKUP_4);
       redSteps = RED_STEPS_4;
       neutralSteps = NEUTRAL_STEPS_4;
-    }
+    }*/
     return true;
   }
   return false;
 }
 
 
-void doPickupSequence(const char sequence[], int pathIndex) {
+/*void doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
   static bool atatNextSquare = true;
   static int prevIndex = pathIndex;
@@ -445,8 +443,7 @@ void loop() {
   if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
     case 0:
-      if(digitalRead(BUTTON_1) == LOW)  state++;
-      writeToWheels(0, 0);
+      if(waitState())  state++;
       break;
     case 1:
       if(followRedPathState())  state = 0;
