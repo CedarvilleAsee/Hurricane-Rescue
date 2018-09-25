@@ -419,10 +419,10 @@ bool followRedPathState() {
   return false;
 }
 
-/*bool followNeutralPathState() {
+bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
   if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
-  doPickupSequence(neutralPickup, neutralIndex);
+  //doPickupSequence(neutralPickup, neutralIndex);
   return false;
 }
 
@@ -433,7 +433,7 @@ bool depositPeopleState(){
     return true;
   }
   return false;
-}*/
+}
 bool doneState() {
    writeToWheels(0, 0);
 }
@@ -449,17 +449,13 @@ void loop() {
       writeToWheels(0, 0);
       break;
     case 1:
-      if(followRedPathState()) state = 0;
-      //lineFollow(HALF_SPEED, 10);
-      break;
-
-    /*case 1:
       if(followRedPathState())  state = 0;
       break;
     case 2:
       if(depositPeopleState())  state++;
       break;
-    case 3: if(turnAroundState()) state++;
+    case 3: 
+      if(turnAroundState()) state++;
       break;
     case 4:
       if(followNeutralPathState()) state++;
@@ -469,7 +465,7 @@ void loop() {
       break;
   default:
       if(doneState()) state = 0;
-      break;*/
+      break;
   }
 
 }

@@ -1,3 +1,5 @@
 *.vcx*
 /.vs/*
 /__vm/*
+/Release/*
+*.sln
