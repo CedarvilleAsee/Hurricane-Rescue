@@ -43,7 +43,7 @@ void setup() {
 
   pinMode(FRONT_SENSOR, INPUT);
   pinMode(FORK_SENSOR, INPUT);
-  
+
  // initialize motor controllers
   pinMode(WHEEL_DIR_LB, OUTPUT);
   pinMode(WHEEL_DIR_LF, OUTPUT);
@@ -82,13 +82,7 @@ void setup() {
 
 }
 
-
-void testWheel(bool wheel, int ts) {
-  if(wheel)
-    writeToWheels(ts, 0);
-  else
-    writeToWheels(0, ts);
-}
+/*******************************General Functions********************/
 
 // Populates the sensors[] variable so that we know amountSeen
 void readLine() {
@@ -161,7 +155,6 @@ void writeWheelDirection(bool ldir, bool rdir) {
   digitalWrite(WHEEL_DIR_RB, !rdir);
 }
 
-
 void writeToWheels(int ls, int rs) {
   if(ls < 0) {
     digitalWrite(WHEEL_DIR_LF, false); //right backwards
@@ -199,8 +192,6 @@ bool lineFollow(int ts, int strictness) {
     writeToWheels(leftSpeed, rightSpeed);
   }
 
-    
-
   // Return true if the sensors can see a fork
   if(readFrontSensor() < WALL_CLOSE) {
     atWall = true;
@@ -214,43 +205,75 @@ bool lineFollow(int ts, int strictness) {
   return false;
 }
 
-
+/*******************Turning******************************************/
 
 bool turn(int spd, char dir) {
-  static int lineCount = 0;
-  static bool gotOffLine = false;
-  if(dir == F) return true;
+   static int lineCount = 0;
+   static bool gotOffLine = false;
+   if (dir == F) return true;
 
 
-  if(dir == L || atWall){
-    writeToWheels(-spd, spd);
-  }else if(dir == R){
-    writeToWheels(spd, -spd);
-  }
+   if (dir == L || atWall) {
+      writeToWheels(-spd, spd);
+   }
+   else if (dir == R) {
+      writeToWheels(spd, -spd);
+   }
 
-  if(amountSeen == 0) gotOffLine = true;
+   if (amountSeen == 0) gotOffLine = true;
 
-  if(dir == B && !atWall) {
-    writeToWheels(-(spd), spd);
-    if(twoConsecutiveAtMiddle() && gotOffLine) { // if it isn't at a wall, the line sensors have to pass another line to turn completely around
-      lineCount++;
-      gotOffLine = false;
-    }
-    if(lineCount == 2){
-      lineCount = 0;
-      return true;
-    }
-  }
-  // Return true if the robot is back centered on the line
+   if (dir == B && !atWall) {
+      writeToWheels(-(spd), spd);
+      if (twoConsecutiveAtMiddle() && gotOffLine) { 
+         // if it isn't at a wall,
+         //the line sensors have to pass another line to turn completely around
+         lineCount++;
+         gotOffLine = false;
+      }
+      if (lineCount == 2) {
+         lineCount = 0;
+         return true;
+      }
+   }
+   // Return true if the robot is back centered on the line
 
-    if(gotOffLine && twoConsecutiveAtMiddle()) {
+   if (gotOffLine && twoConsecutiveAtMiddle()) {
       atWall = false;
       gotOffLine = false;
       return true;
-    }
-    return false;
+   }
+   return false;
 
 }
+
+bool doTurnSequence(const char sequence[], int index, int maxSteps) {
+   index++; // should be acting on next instruction, not current
+   if (index == maxSteps) {
+      if (lineFollow(HALF_SPEED, 10)) {
+         return true;
+      }
+   }
+   else {
+      if (turning) {
+         if (turn(HALF_SPEED, sequence[index])) {
+            turning = false;
+            return true;
+         }
+      }
+      else {
+         /*if(index + 1 < maxSteps){
+         if(sequence[index + 1] == F) {
+         turning = lineFollow(FULL_SPEED, 50);
+         return false;
+         }
+         } //should work, but not tested with person*/
+         turning = lineFollow(HALF_SPEED, 10);
+      }
+   }
+   return false;
+}
+
+/*********************States******************************/
 
 bool delayState(int ms) {
   static int milliseconds = -1;
@@ -264,7 +287,7 @@ bool delayState(int ms) {
   return false;
 }
 // State 0
-//  Waits until the button on board is pushed. When it is pushed then go to next state
+//  Waits until the button on board is pushed, go to next state
 /*bool waitState() {
   writeToWheels(0, 0);
   if(digitalRead(BUTTON1) == LOW) {
@@ -310,7 +333,8 @@ void doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
   static bool atatNextSquare = true;
   static int prevIndex = pathIndex;
-  if(prevIndex != pathIndex) { // when robot reaches intersection or wall // remember this when turning, just in case there is a person getting knocked off
+  if(prevIndex != pathIndex) { // when robot reaches intersection or wall
+  // remember this when turning, just in case there is a person getting knocked off
     prevIndex = pathIndex;
     atatNextSquare = true;
   }
@@ -387,31 +411,6 @@ bool turnAroundState() {
   return turn(HALF_SPEED, B);
 }
 
-bool doTurnSequence(const char sequence[], int index, int maxSteps) {
-  index++; // should be acting on next instruction, not current
-  if(index == maxSteps) {
-    if(lineFollow(HALF_SPEED, 10)){
-      return true;
-    }
-  }
-  else {
-    if(turning) {
-      if(turn(HALF_SPEED, sequence[index])) {
-          turning = false;
-          return true;
-      }
-    } else {
-      /*if(index + 1 < maxSteps){
-        if(sequence[index + 1] == F) {
-          turning = lineFollow(FULL_SPEED, 50);
-          return false;
-        }
-      } //should work, but not tested with person*/
-      turning = lineFollow(HALF_SPEED, 10);
-    }
-  }
-  return false;
-}
 
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
@@ -427,8 +426,6 @@ bool followRedPathState() {
   return false;
 }
 
-
-
 bool depositPeopleState(){
   dump.write(DO_DUMP);
   if(delayState(2000)) {
@@ -438,8 +435,9 @@ bool depositPeopleState(){
   return false;
 }*/
 bool doneState() {
-
+   writeToWheels(0, 0);
 }
+
 void loop() {
   static int state = 0;
   static bool test = false;
