@@ -115,7 +115,7 @@ void PT6961::sendMessage(int message)
     lineDisp[0] = 0x73; //P
     lineDisp[1] = 0x00;
     lineDisp[2] = 0x00;
-    lineDisp[3] = 0x50; //R
+    lineDisp[3] = 0x50; //r
   }
   else if(message == PICKUP_LEFT) {
     lineDisp[0] = 0x73; //P
@@ -141,6 +141,8 @@ void PT6961::sendMessage(int message)
     lineDisp[2] = 0x54; //n
     lineDisp[3] = 0x79; //E
   }
+
+  
   
   digitalWrite(_CS,LOW);
   shiftOut(_DIN, _CLK, LSBFIRST, 0xC0);

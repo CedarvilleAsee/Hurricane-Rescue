@@ -3,6 +3,9 @@ const int CS    = PC13;
 const int CLOCK = PC14;
 const int DIN   = PC15;
 
+//mission switches
+const int SWITCH0 = PA12;
+const int SWITCH1 = PA15; 
 
 //old servos
     #define DUMP_SERVO    PA8

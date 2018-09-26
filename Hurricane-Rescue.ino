@@ -120,31 +120,10 @@ void readLine() {
   
 }
 
-bool twoConsecutiveAtMiddle() {
-  return twoConsecutive() && firstLineIndex >= TARGET_INDEX /*&& lastLineIndex <= TARGET_INDEX + 1*/;
-}
-
-/*bool twoConsecutiveAtMiddle() {
+bool sensorsCentered() {
   return sensors[3] == HIGH && sensors[4] == HIGH;
-}*/
-
-bool twoConsecutive() {
-  int lowCount = 0;
-  bool consecutive = false;
-  for(int i = 0; i < 7; i++) {
-    if(sensors[i] == HIGH && sensors[i + 1] == HIGH) {
-      consecutive = true;
-    }
-
-    if(sensors[i] == LOW) {
-      lowCount++;
-    }
-  }
-  if(sensors[7] == LOW) {
-    lowCount++;
-  }
-  return lowCount == 6 && consecutive;
 }
+
 void writeWheelDirection(bool ldir, bool rdir) {
   digitalWrite(WHEEL_DIR_LF, ldir);
   digitalWrite(WHEEL_DIR_LB, !ldir);
@@ -218,7 +197,7 @@ bool turn(int spd, char dir) {
 
    if (dir == B && !atWall) {
       writeToWheels(-(spd), spd);
-      if (twoConsecutiveAtMiddle() && gotOffLine) { 
+      if (sensorsCentered() && gotOffLine) { 
          // if it isn't at a wall,
          //the line sensors have to pass another line to turn completely around
          lineCount++;
@@ -231,7 +210,7 @@ bool turn(int spd, char dir) {
    }
    // Return true if the robot is back centered on the line
 
-   if (gotOffLine && twoConsecutiveAtMiddle()) {
+   if (gotOffLine && sensorsCentered()) {
       atWall = false;
       gotOffLine = false;
       return true;
@@ -243,7 +222,7 @@ bool turn(int spd, char dir) {
 bool doTurnSequence(const char sequence[], int index, int maxSteps) {
    index++; // should be acting on next instruction, not current
    if (index == maxSteps) {
-      if (lineFollow(HALF_SPEED, 10)) {
+      if (lineFollow(FULL_SPEED, 20)) {
          return true;
       }
    }
@@ -261,7 +240,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
          return false;
          }
          } //should work, but not tested with person*/
-         turning = lineFollow(HALF_SPEED, 10);
+         turning = lineFollow(FULL_SPEED, 20);
       }
    }
    return false;
@@ -435,6 +414,7 @@ bool depositPeopleState(){
     return true;
   }
   */
+  writeToWheels(0, 0);
   if(delayState(1000)) {
     return true;
   }
@@ -448,19 +428,47 @@ bool doneState() {
    return false;
 }
 
+bool displayMissionState() {
+  if(digitalRead(SWITCH1) == HIGH) {
+    if(digitalRead(SWITCH0) == HIGH) {
+      missionNum = 4;
+    }
+    else {
+      missionNum = 3;
+    }
+  }
+  else {
+    if(digitalRead(SWITCH0) == HIGH) {
+      missionNum = 2;
+    }
+    else {
+      missionNum = 1;
+    }
+  }
+  if(digitalRead(BUTTON_2) == LOW) {
+    return true;
+  }
+  return false;
+}
+
 void loop() {
-  static int state = 0;
+  static int state = -1;
   readLine();
   if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
+    case -1:
+      if(displayMissionState()) state++;
+      display.sendNum(missionNum, 1);
+      break;
     case 0:
       if(waitState())  state++;
       display.sendNum(sensorCounter, 0);
       break;
     case 1:
-      if(followRedPathState())  state = 0;
+      if(followRedPathState())  state++;
       break;
     case 2:
+      
       if(depositPeopleState())  state++;
       break;
     case 3: 

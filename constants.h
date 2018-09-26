@@ -5,7 +5,7 @@
 //speed constants
 const int SLOW_SPEED = 50;
 const int HALF_SPEED = 50;
-const int FULL_SPEED = 50;
+const int FULL_SPEED = 80;
 
 //Joel constants
 const int TARGET_INDEX = 4;
@@ -17,6 +17,7 @@ const int PICKUP_RIGHT = 1;
 const int PICKUP_LEFT = 2;
 const int DEPOSITING = 3;
 const int DONE = 4;
+
 
 //direction constants
 const char L = 'l';
@@ -46,7 +47,7 @@ const int R_DOWN_POS = 50;
 const int L_UP_POS = 100;
 const int L_DOWN_POS = 50;
 
-const int WALL_CLOSE = 300;
+const int WALL_CLOSE = 400; //300 for speed 50
 const int AT_FORK = 2500;
 
 
