@@ -20,7 +20,7 @@ class PT6961
     void sendDigit(char digit, char val);
     void sendNum(int num, char colon);
     void sendDigits(char digit1, char digit2, char digit3, char digit4, char colon);
-    void sendLineReading(int sensor[]);
+    void sendMessage(int message);
 	
     const static char _DISPLAY_6X12 = 0x02;
     const static char _DISPLAY_7X11 = 0x03;

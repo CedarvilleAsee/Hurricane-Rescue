@@ -3,6 +3,7 @@ const int CS    = PC13;
 const int CLOCK = PC14;
 const int DIN   = PC15;
 
+
 //old servos
     #define DUMP_SERVO    PA8
     #define EJECT_SERVO   PA10
@@ -25,28 +26,10 @@ const int WHEEL_SPEED_R = PB0; //PWMA
 //const int WHEEL_STBY = 33;
 
 // Line sensors
-//int LINE_SENSOR[] = {PA5, PA6, PA7, PA3, PA15, PB10, PB11, PA11};
-int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//least to most
+int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//0 to 7
 //Analog
 
 const int FRONT_SENSOR = PA0;
-const int FORK_SENSOR = PA2; //or PA4?
-
-// Sorter light
-//const int SENSOR_A   = 86;
-//const int SENSOR_CLK = 87;
-
-// Servos
-//const int L_DUMP   = 9;
-//const int L_TUBE   = 11;
-//const int R_TUBE   = 6;
-//const int SORTER   = 4;
-//const int SORTER = 13;
-//const int RIGHT_ARM = 12;
-//const int LEFT_ARM = 11;
-//const int RIGHT_BIN = 10;
-//const int LEFT_BIN = 9;
-//const int RIGHT_ELBOW = 6;
-//const int LEFT_ELBOW = 5;
+const int FORK_SENSOR = PA2;
 
 

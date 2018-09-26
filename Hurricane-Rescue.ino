@@ -18,15 +18,16 @@ Servo claw;
 bool turning = false;
 bool pickingUp = false;
 /////////////////////////////////
-char redPath[40] = {F, F, B, B, B};
-int redSteps = 5;
+int missionNum = 1;
 /////////////////////////////////
+char redPath[40];
 char neutralPath[40];
 char redPickup[40];
 char neutralPickup[40];
 bool atWall = false;
 int neutralSteps;
-int missionNum = 1;
+int redSteps;
+int sensorCounter = 0;
 
 int redIndex = 0;
 int neutralIndex = 0;
@@ -77,6 +78,7 @@ void setup() {
 }
 
 /*****************************General Functions*******************/
+
 int readFrontSensor() {
    return analogRead(FRONT_SENSOR);
 }
@@ -84,12 +86,18 @@ int readForkSensor() {
    return analogRead(FORK_SENSOR);
 }
 
+/*int readRightClaw() {
+   return analogRead(R_CLAW_SENSOR);
+}
+int readLeftClaw() {
+   return analogRead(L_CLAW_SENSOR);
+}*/
+
 /*******************************Line Following********************/
 
 
 // Populates the sensors[] variable so that we know amountSeen
 void readLine() {
-  int sensorCounter = 0;
   amountSeen = 0;
   lastLineIndex = -1;
   for(int i = 7; i >= 0; --i) {
@@ -104,23 +112,14 @@ void readLine() {
       firstLineIndex = i;
     }
   }
-  //display.sendLineReading(sensors);
 
+  sensorCounter = 0;
   for (int i = 0; i < 8; i++ ){
     sensorCounter += sensors[i]<<i;
   }
-  display.sendNum(sensorCounter, 0);
-  //display.sendNum(amountSeen, 0);
+  
 }
 
-
-
-/*int readRightClaw() {
-   return analogRead(R_CLAW_SENSOR);
-}
-int readLeftClaw() {
-   return analogRead(L_CLAW_SENSOR);
-}*/
 bool twoConsecutiveAtMiddle() {
   return twoConsecutive() && firstLineIndex >= TARGET_INDEX /*&& lastLineIndex <= TARGET_INDEX + 1*/;
 }
@@ -182,9 +181,6 @@ bool lineFollow(int ts, int strictness) {
     writeToWheels(ts, ts);
   }
   else {
-    /*int offset = firstLineIndex - TARGET_INDEX;
-    int rightSpeed = ts + offset*strictness;
-    int leftSpeed = ts - offset*strictness;*/
     int rightSpeed = ts + (lastLineIndex - 4)*strictness;
     int leftSpeed = ts - (firstLineIndex - 3)*strictness;
     writeToWheels(leftSpeed, rightSpeed);
@@ -284,65 +280,70 @@ bool delayState(int ms) {
   }
   return false;
 }
+
 // State 0
 //  Waits until the button on board is pushed, go to next state
 bool waitState() {
   writeToWheels(0, 0);
-  if(digitalRead(BUTTON_1) == LOW) {/*
-    if(mission == 1) {
-      strcpy(redPath, RED_MISSION_1);
-      strcpy(neutralPath, NEUTRAL_MISSION_1);
-      strcpy(redPickup, RED_PICKUP_1);
-      strcpy(neutralPickup, NEUTRAL_PICKUP_1);
+  if(digitalRead(BUTTON_1) == LOW) {
+    //get mission number from switches
+    if(missionNum == 1) {
+      strncpy(redPath, RED_MISSION_1, RED_STEPS_1);
+      strncpy(neutralPath, NEUTRAL_MISSION_1, NEUTRAL_STEPS_1);
+      strncpy(redPickup, RED_PICKUP_1, RED_STEPS_1);
+      strncpy(neutralPickup, NEUTRAL_PICKUP_1, NEUTRAL_STEPS_1);
       redSteps = RED_STEPS_1;
       neutralSteps = NEUTRAL_STEPS_1;
     }
-    else if(mission == 2) {
-      strcpy(redPath, RED_MISSION_2);
-      strcpy(neutralPath, NEUTRAL_MISSION_2);
-      strcpy(redPickup, RED_PICKUP_2);
-      strcpy(neutralPickup, NEUTRAL_PICKUP_2);
+    else if(missionNum == 2) {
+      strncpy(redPath, RED_MISSION_2, RED_STEPS_2);
+      strncpy(neutralPath, NEUTRAL_MISSION_2, NEUTRAL_STEPS_2);
+      strncpy(redPickup, RED_PICKUP_2, RED_STEPS_2);
+      strncpy(neutralPickup, NEUTRAL_PICKUP_2, NEUTRAL_STEPS_2);
       redSteps = RED_STEPS_2;
       neutralSteps = NEUTRAL_STEPS_2;
     }
-    else if(mission == 3) {
-      strcpy(redPath, RED_MISSION_3);
-      strcpy(neutralPath, NEUTRAL_MISSION_3);
-      strcpy(redPickup, RED_PICKUP_3);
-      strcpy(neutralPickup, NEUTRAL_PICKUP_3);
+    else if(missionNum == 3) {
+      strncpy(redPath, RED_MISSION_3, RED_STEPS_3);
+      strncpy(neutralPath, NEUTRAL_MISSION_3, NEUTRAL_STEPS_3);
+      strncpy(redPickup, RED_PICKUP_3, RED_STEPS_3);
+      strncpy(neutralPickup, NEUTRAL_PICKUP_3, NEUTRAL_STEPS_3);
       redSteps = RED_STEPS_3;
       neutralSteps = NEUTRAL_STEPS_3;
     }
-    else if(mission == 4) {
-      strcpy(redPath, RED_MISSION_4);
-      strcpy(neutralPath, NEUTRAL_MISSION_4);
-      strcpy(redPickup, RED_PICKUP_4);
-      strcpy(neutralPickup, NEUTRAL_PICKUP_4);
+    else if(missionNum == 4) {
+      strncpy(redPath, RED_MISSION_4, RED_STEPS_4);
+      strncpy(neutralPath, NEUTRAL_MISSION_4, NEUTRAL_STEPS_4);
+      strncpy(redPickup, RED_PICKUP_4, RED_STEPS_4);
+      strncpy(neutralPickup, NEUTRAL_PICKUP_4, NEUTRAL_STEPS_4);
       redSteps = RED_STEPS_4;
       neutralSteps = NEUTRAL_STEPS_4;
-    }*/
+    }
     return true;
   }
   return false;
 }
 
 
-/*void doPickupSequence(const char sequence[], int pathIndex) {
+void doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
-  static bool atatNextSquare = true;
+  static bool atNextSquare = true;
   static int prevIndex = pathIndex;
-  if(prevIndex != pathIndex) { // when robot reaches intersection or wall
-  // remember this when turning, just in case there is a person getting knocked off
+  if(prevIndex != pathIndex) { 
     prevIndex = pathIndex;
-    atatNextSquare = true;
+    atNextSquare = true;
   }
-  if(atatNextSquare){
-    if(sequence[pathIndex] == EMPTY) {
-      atatNextSquare = false;
+  if(atNextSquare){
+    if(sequence[pathIndex] == E) {
+      display.sendMessage(PICKUP_EMPTY);
+      atNextSquare = false;
       return;
     }
     else if(sequence[pathIndex] == L) {
-      switch(pickupStateIndex) {
+      display.sendMessage(PICKUP_LEFT);
+        atNextSquare = false; //temp
+        return;//temp
+      /*switch(pickupStateIndex) {
         case 0:
           leftClawArm.write(L_DOWN_POS);
           if(delayState(400)) pickupStateIndex++;
@@ -361,7 +362,7 @@ bool waitState() {
           leftClaw.write(L_OPEN);
           if(delayState(100)) {
             pickupStateIndex = 0;
-            atatNextSquare = false;
+            atNextSquare = false;
             return;
           }
           break;
@@ -369,10 +370,13 @@ bool waitState() {
           leftClawArm.write(L_UP_POS);
           leftClaw.write(L_OPEN);
           break;
-      }
+      }*/
     }
     else if(sequence[pathIndex] == R) {
-      switch(pickupStateIndex) {
+      display.sendMessage(PICKUP_RIGHT);
+      atNextSquare = false; //temp
+      return; //temp
+      /*switch(pickupStateIndex) {
         case 0:
           rightClawArm.write(R_DOWN_POS);
           if(delayState(400)) pickupStateIndex++;
@@ -399,11 +403,11 @@ bool waitState() {
           rightClawArm.write(R_UP_POS);
           rightClaw.write(R_OPEN);
           break;
-      }
+      }*/
     }
   }
   return;
-}*/
+}
 
 bool turnAroundState() {
   return turn(HALF_SPEED, B);
@@ -413,37 +417,45 @@ bool turnAroundState() {
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
   if(doTurnSequence(redPath, redIndex, redSteps)) redIndex++;
-  //doPickupSequence(redPickup, redIndex);
+  doPickupSequence(redPickup, redIndex);
   return false;
 }
 
 bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
   if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
-  //doPickupSequence(neutralPickup, neutralIndex);
+  doPickupSequence(neutralPickup, neutralIndex);
   return false;
 }
 
 bool depositPeopleState(){
-  dump.write(DO_DUMP);
+  /*dump.write(DO_DUMP);
   if(delayState(2000)) {
     dump.write(DONT_DUMP);
     return true;
   }
+  */
+  if(delayState(1000)) {
+    return true;
+  }
+  display.sendMessage(DEPOSITING);
   return false;
 }
+
 bool doneState() {
+   display.sendMessage(DONE);
    writeToWheels(0, 0);
+   return false;
 }
 
 void loop() {
   static int state = 0;
-  static bool test = false;
   readLine();
   if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
     case 0:
       if(waitState())  state++;
+      display.sendNum(sensorCounter, 0);
       break;
     case 1:
       if(followRedPathState())  state = 0;
@@ -458,7 +470,7 @@ void loop() {
       if(followNeutralPathState()) state++;
       break;
     case 5:
-      if(depositPeopleState()) state = 0;
+      if(depositPeopleState()) state++;
       break;
   default:
       if(doneState()) state = 0;

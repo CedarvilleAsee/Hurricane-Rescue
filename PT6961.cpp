@@ -3,6 +3,7 @@
   Created by Garrett Blanton January, 16, 2013.
   Released into the public domain.
 */
+#include "constants.h"
 
 //0 - A
 //1 - B
@@ -107,19 +108,38 @@ void PT6961::sendDigits(char digit1, char digit2, char digit3, char digit4, char
   digitalWrite(_CS,HIGH);    
 }
 
-void PT6961::sendLineReading(int sensor[])
+void PT6961::sendMessage(int message)
 {
   char lineDisp[4];
-  char temp = 0;
-  for(int j = 0; j < 4; j++) {
-    temp = 0;
-    if(sensor[2 * j] != 1){
-      temp = 0x08;
-    }
-    if(sensor[2 * j + 1] != 1){
-      temp = temp | 0x80;
-    }
-    lineDisp[j] = temp;
+  if(message == PICKUP_RIGHT) {
+    lineDisp[0] = 0x73; //P
+    lineDisp[1] = 0x00;
+    lineDisp[2] = 0x00;
+    lineDisp[3] = 0x50; //R
+  }
+  else if(message == PICKUP_LEFT) {
+    lineDisp[0] = 0x73; //P
+    lineDisp[1] = 0x00;
+    lineDisp[2] = 0x00;
+    lineDisp[3] = 0x38; //L
+  }
+  else if(message == PICKUP_EMPTY) {
+    lineDisp[0] = 0x73; //P
+    lineDisp[1] = 0x00;
+    lineDisp[2] = 0x00; 
+    lineDisp[3] = 0x79; //E
+  }
+  else if(message == DEPOSITING) {
+    lineDisp[0] = 0x5E; //D
+    lineDisp[1] = 0x79; //E
+    lineDisp[2] = 0x73; //P
+    lineDisp[3] = 0x3F; //O
+  }
+  else if(message == DONE) {
+    lineDisp[0] = 0x5E; //D
+    lineDisp[1] = 0x3F; //O
+    lineDisp[2] = 0x54; //n
+    lineDisp[3] = 0x79; //E
   }
   
   digitalWrite(_CS,LOW);
