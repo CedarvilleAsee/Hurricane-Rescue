@@ -239,7 +239,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
          turning = lineFollow(FULL_SPEED, 50);
          return false;
          }
-         } //should work, but not tested with person*/
+         } //not tested yet*/
          turning = lineFollow(FULL_SPEED, 20);
       }
    }

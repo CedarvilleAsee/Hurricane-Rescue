@@ -1,3 +1,10 @@
-Translate test code to the main repo
-Make code for pickups that run with the turn sequence
-See if strcpy works
+*work on claw
+	find servo values for arm and claw operation
+	try to pickup people
+request switches for new robot to switch missions
+	electronics team
+go faster if next move is forward
+	line 237
+maybe switch sides of intersection sensor and work on dumping servos
+	find valid values for operation
+	try to dump people
