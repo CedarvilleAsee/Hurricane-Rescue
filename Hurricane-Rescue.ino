@@ -29,6 +29,7 @@ int neutralSteps;
 int redSteps;
 int sensorCounter = 0;
 
+int pickupIndex = 0;
 int redIndex = 0;
 int neutralIndex = 0;
 
@@ -69,9 +70,9 @@ void setup() {
   dump.attach(DUMP_SERVO);//dump bin
   dump.write(15);//to closed position
   arm.attach(ARM_SERVO);
-  arm.write(100);
+  arm.write(ARM_UP);
   claw.attach(CLAW_SERVO);
-  claw.write(1);
+  claw.write(CLAW_OPEN);
   eject.attach(EJECT_SERVO);
   eject.write(115);
 
@@ -86,10 +87,10 @@ int readForkSensor() {
    return analogRead(FORK_SENSOR);
 }
 
-/*int readRightClaw() {
-   return analogRead(R_CLAW_SENSOR);
+int readClaw() {
+   return analogRead(CLAW_SENSOR);
 }
-int readLeftClaw() {
+/*int readLeftClaw() {
    return analogRead(L_CLAW_SENSOR);
 }*/
 
@@ -156,6 +157,9 @@ void writeToWheels(int ls, int rs) {
 bool lineFollow(int ts, int strictness) {
   static bool frontPassed = false;
   if(amountSeen >= TURN_AMOUNT){
+    if(frontPassed == false) {
+      pickupIndex++;
+    }
     frontPassed = true;
     writeToWheels(ts, ts);
   }
@@ -236,7 +240,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
       else {
          /*if(index + 1 < maxSteps){
          if(sequence[index + 1] == F) {
-         turning = lineFollow(FULL_SPEED, 50);
+         turning = lineFollow(FULL_SPEED, 50);//change to 30
          return false;
          }
          } //not tested yet*/
@@ -308,6 +312,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
   static bool atNextSquare = true;
   static int prevIndex = pathIndex;
+  static bool clawClose = false;
   if(prevIndex != pathIndex) { 
     prevIndex = pathIndex;
     atNextSquare = true;
@@ -353,36 +358,35 @@ void doPickupSequence(const char sequence[], int pathIndex) {
     }
     else if(sequence[pathIndex] == R) {
       display.sendMessage(PICKUP_RIGHT);
-      atNextSquare = false; //temp
-      return; //temp
-      /*switch(pickupStateIndex) {
+      if(clawClose) claw.write(CLAW_CLOSE);
+      switch(pickupStateIndex) {
         case 0:
-          rightClawArm.write(R_DOWN_POS);
-          if(delayState(400)) pickupStateIndex++;
+          arm.write(ARM_DOWN);
+          if(delayState(80))
+          pickupStateIndex++;
           break;
         case 1:
-          if(readRightClaw() < PERSON_CLOSE) {
-            rightClaw.write(R_CLOSE);
-            if(delayState(100)) pickupStateIndex++;
+          if(readClaw() < PERSON_CLOSE) {
+            clawClose = true;
+            if(delayState(70)) pickupStateIndex++;
           }
           break;
         case 2:
-          rightClawArm.write(R_UP_POS);
-          if(delayState(400)) pickupStateIndex++;
+          arm.write(ARM_UP);
+          if(delayState(500)) {
+            clawClose = false;
+            pickupStateIndex++;
+          }
           break;
         case 3:
-          rightClaw.write(R_OPEN);
+          claw.write(CLAW_OPEN);
           if(delayState(100)) {
             pickupStateIndex = 0;
             atNextSquare = false;
-            return ;
+            return;
           }
           break;
-        default:
-          rightClawArm.write(R_UP_POS);
-          rightClaw.write(R_OPEN);
-          break;
-      }*/
+      }
     }
   }
   return;
@@ -396,7 +400,7 @@ bool turnAroundState() {
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
   if(doTurnSequence(redPath, redIndex, redSteps)) redIndex++;
-  doPickupSequence(redPickup, redIndex);
+  doPickupSequence(redPickup, pickupIndex);
   return false;
 }
 
@@ -468,8 +472,8 @@ void loop() {
       if(followRedPathState())  state++;
       break;
     case 2:
-      
-      if(depositPeopleState())  state++;
+      pickupIndex = 0;
+      if(depositPeopleState())  state=6;
       break;
     case 3: 
       if(turnAroundState()) state++;
@@ -484,5 +488,6 @@ void loop() {
       if(doneState()) state = 0;
       break;
   }
+
 
 }

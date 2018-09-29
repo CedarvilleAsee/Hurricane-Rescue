@@ -10,8 +10,9 @@ const int SWITCH1 = PA15;
 //old servos
     #define DUMP_SERVO    PA8
     #define EJECT_SERVO   PA10
-    #define ARM_SERVO     PA9
-    #define CLAW_SERVO    PB6
+const int ARM_SERVO = PA9;
+
+   const int CLAW_SERVO = PB6;
 
 // Buttons
 const int BUTTON_2 = PB4;//stopbutton
@@ -34,5 +35,6 @@ int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//0 to 7
 
 const int FRONT_SENSOR = PA0;
 const int FORK_SENSOR = PA2;
+const int CLAW_SENSOR = PA1;
 
 
