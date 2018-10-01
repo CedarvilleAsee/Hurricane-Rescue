@@ -1,10 +1,20 @@
-*work on claw
-	find servo values for arm and claw operation
-	try to pickup people
-request switches for new robot to switch missions
+*request switches for new robot to switch missions
 	electronics team
-go faster if next move is forward
+4go faster if next move is forward
 	line 237
-maybe switch sides of intersection sensor and work on dumping servos
-	find valid values for operation
-	try to dump people
+1turn before dumping (slightly right)
+	ask solidworks how dumping works
+	finish turn to go to the next stage after dumping
+	make path for going to fire
+		see how depositing will work
+
+2don't lower claw until after almost done with turn
+	prevent knocking down people while turning
+
+6see if nextion code modifiable for not blocking code
+	see if nextion can be used with blue pill
+
+5sound creation 
+
+3 make code more readable
+	comment everything
