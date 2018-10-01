@@ -1,4 +1,7 @@
-#include "constants.h"
+//////////////Don't change//////
+const char RACKET_BALL[] = {R, F, F, F, F, F, L, F};
+
+const char RACKET_BALL_STEPS = 8;
 
 const char RED_MISSION_1[] = { F, F, R, L, F, F, L, F, L, F, F, F };
 
@@ -11,6 +14,8 @@ const char NEUTRAL_MISSION_1[] = { F, F, F, F, F, F, R, F, F, B, F, L, F, F, F, 
 const char NEUTRAL_PICKUP_1[] = { E, E, L, E, E, L, E, R, L, E, E, E, E, E, E, E, E, E };
 
 const int NEUTRAL_STEPS_1 = 18;
+
+///////////////////////////////
 
 
 const char RED_MISSION_2[] = { F, F, F, F, F, F, F, R, R, F, F, R, F, L, F, F };
@@ -51,5 +56,4 @@ const char NEUTRAL_MISSION_4[] = { F, F, F, F, F, R, F, R, F, F, F, R, L, L };
 const char NEUTRAL_PICKUP_4[] = { E, E, R, E, E, L, E, E, R, E, L, E, E, E };
 
 const int NEUTRAL_STEPS_4 = 14;
-
 
