@@ -240,7 +240,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
       else {
          /*if(index + 1 < maxSteps){
          if(sequence[index + 1] == F) {
-         turning = lineFollow(FULL_SPEED, 50);//change to 30
+         turning = lineFollow(MAX_SPEED, 20);
          return false;
          }
          } //not tested yet*/

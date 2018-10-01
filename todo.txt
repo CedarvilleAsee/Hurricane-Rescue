@@ -1,6 +1,6 @@
 *request switches for new robot to switch missions
 	electronics team
-4go faster if next move is forward
+3go faster if next move is forward
 	line 237
 1turn before dumping (slightly right)
 	ask solidworks how dumping works
@@ -16,5 +16,5 @@
 
 5sound creation 
 
-3 make code more readable
+4 make code more readable
 	comment everything

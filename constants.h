@@ -6,6 +6,7 @@
 const int SLOW_SPEED = 50;
 const int HALF_SPEED = 50;
 const int FULL_SPEED = 50;
+const int MAX_SPEED = 80;
 
 //Joel constants
 const int TARGET_INDEX = 4;
