@@ -1,7 +1,7 @@
 #ifndef SUBSTATES
 #define SUBSTATES
 
-//non blocking delay
+//non-blocking delay
 bool delayState(int ms) {
   static int milliseconds = -1;
   if(milliseconds == -1) {
@@ -18,7 +18,11 @@ bool delayState(int ms) {
 // State 0
 //  Waits until the button on board is pushed, go to next state
 bool waitState() {
+  //for centering robot
+  display.sendNum(sensorCounter, 0);
+  //keeps the robot still
   writeToWheels(0, 0);
+  //when started, copy missions into globals
   if(digitalRead(BUTTON_1) == LOW) {
     //get mission number from switches
     if(missionNum == 1) {
@@ -126,12 +130,13 @@ void doPickupSequence(const char sequence[], int pathIndex) {
           arm.write(ARM_UP);
           if(delayState(500)) {
             clawClose = false;
+            claw.write(CLAW_OPEN);
             pickupStateIndex++;
           }
           break;
         case 3:
           claw.write(CLAW_OPEN);
-          if(delayState(100)) {
+          if(delayState(10)){
             pickupStateIndex = 0;
             atNextSquare = false;
             return;
@@ -158,22 +163,34 @@ bool followRedPathState() {
 bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
   if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
-  doPickupSequence(neutralPickup, neutralIndex);
+  doPickupSequence(neutralPickup, pickupIndex);
   return false;
 }
 
 bool depositPeopleState(){
-  /*dump.write(DO_DUMP);
-  if(delayState(2000)) {
-    dump.write(DONT_DUMP);
-    return true;
-  }
-  */
-  writeToWheels(0, 0);
-  if(delayState(1000)) {
-    return true;
-  }
+  static int depositIndex = 0;
   display.sendMessage(DEPOSITING);
+  arm.write(ARM_MIDDLE);
+  switch(depositIndex) {
+    case 0:
+      turn(HALF_SPEED, R);
+      if(atIntersection()){
+        writeToWheels(0, 0);
+        depositIndex++;
+      }
+      break;
+    case 1:
+      dump.write(DO_DUMP);
+      if(delayState(1500)) depositIndex++;
+      break;
+    case 2:
+      dump.write(DONT_DUMP);
+      if(turn(HALF_SPEED, R)) {
+        depositIndex = 0;
+        return true;
+      }
+      break;
+  }
   return false;
 }
 
@@ -184,6 +201,7 @@ bool doneState() {
 }
 
 bool displayMissionState() {
+  display.sendNum(missionNum, 1);
   if(digitalRead(SWITCH1) == HIGH) {
     if(digitalRead(SWITCH0) == HIGH) {
       missionNum = 4;

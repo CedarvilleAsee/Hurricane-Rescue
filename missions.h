@@ -1,7 +1,8 @@
 //////////////Don't change//////
-const char RACKET_BALL[] = {R, F, F, F, F, F, L, F};
+const char RACKET_BALL[] = {R, F, F, F, F, F, L, F}; // subject to implementation of raquetball depositing
 
 const char RACKET_BALL_STEPS = 8;
+
 
 const char RED_MISSION_1[] = { F, F, R, L, F, F, L, F, L, F, F, F };
 
@@ -47,13 +48,14 @@ const int NEUTRAL_STEPS_3 = 18;
 
 const char RED_MISSION_4[] = { F, F, F, F, F, F, F, L, L, F, F, F, F, F };
 
-const char RED_PICKUP_4[] = { E, E, R, E, E, E, E, R, E, R, E, E, E, E };
+const char RED_PICKUP_4[] = { E, E, E, R, R, E, E, R, E, E, E, E, E, E };
 
 const int RED_STEPS_4 = 14;
 
-const char NEUTRAL_MISSION_4[] = { F, F, F, F, F, R, F, R, F, F, F, R, L, L };
+const char NEUTRAL_MISSION_4[] = { F, R, F, L, F, F, F, F, L, L, F, F, F, F, F, L };
 
-const char NEUTRAL_PICKUP_4[] = { E, E, R, E, E, L, E, E, R, E, L, E, E, E };
+const char NEUTRAL_PICKUP_4[] = { E, E, E, E, E, E, R, R, E, E, E, R, R, E, E, E };
 
-const int NEUTRAL_STEPS_4 = 14;
+const int NEUTRAL_STEPS_4 = 16;
+
 

@@ -31,8 +31,8 @@ const char E = '0';
 const bool WHEEL_FORWARDS   = true;
 const bool WHEEL_BACKWARDS  = false;
 
-const int DO_DUMP = 50;
-const int DONT_DUMP = 100;
+const int DO_DUMP = 100;
+const int DONT_DUMP = 15;
 
 const int PERSON_CLOSE = 2000;
 
@@ -40,8 +40,10 @@ const int WALL_CLOSE = 400; //300 for speed 50
 const int AT_FORK = 2500;
 
 const int ARM_UP = 130;
+const int ARM_MIDDLE = 100;
 const int ARM_DOWN = 17;
 
 const int CLAW_OPEN = 80;
 const int CLAW_CLOSE = 52;
+
 #endif

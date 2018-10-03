@@ -78,7 +78,7 @@ bool lineFollow(int ts, int strictness) {
     atWall = true;
     return true;
   }
-  if(readForkSensor() > AT_FORK && frontPassed) {
+  if(atIntersection() && frontPassed) {
     frontPassed = false;
     return true;
   }

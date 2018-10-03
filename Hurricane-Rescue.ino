@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
-#include "new_pins.h"
+#include "pins.h"
 #include "constants.h"
 #include "missions.h"
 #include "PT6961.h"
@@ -40,8 +40,7 @@ void setup() {
 
   writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
 
-  dump.attach(DUMP_SERVO);//dump bin
-  dump.write(15);//to closed position
+
   eject.attach(EJECT_SERVO);
   eject.write(115);
   
@@ -49,33 +48,35 @@ void setup() {
   arm.write(ARM_UP);
   claw.attach(CLAW_SERVO);
   claw.write(CLAW_OPEN);
-
-
+  dump.attach(DUMP_SERVO);//dump bin
+  dump.write(DONT_DUMP);//to closed position
 }
 
 
 void loop() {
+
   static int state = -1;
   readLine();
   if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
+
     case -1:
       if(displayMissionState()) state++;
-      display.sendNum(missionNum, 1);
       break;
     case 0:
       if(waitState())  state++;
-      display.sendNum(sensorCounter, 0);
       break;
     case 1:
       if(followRedPathState())  state++;
       break;
     case 2:
-      pickupIndex = 0;
-      if(depositPeopleState())  state=6;
+      if(depositPeopleState())  state++;
       break;
     case 3: 
-      if(turnAroundState()) state++;
+    //reset
+        pickupIndex = 0;
+        atWall = false;
+        state++;
       break;
     case 4:
       if(followNeutralPathState()) state++;
@@ -83,6 +84,7 @@ void loop() {
     case 5:
       if(depositPeopleState()) state++;
       break;
+
   default:
       if(doneState()) state = 0;
       break;

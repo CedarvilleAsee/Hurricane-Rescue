@@ -11,8 +11,8 @@ const int SWITCH0 = PA12;
 const int SWITCH1 = PA15; 
 
 //old servos
-    #define DUMP_SERVO    PA8
-    #define EJECT_SERVO   PA10
+const int DUMP_SERVO = PA8;
+const int EJECT_SERVO = PA10;
 const int ARM_SERVO = PA9;
 
    const int CLAW_SERVO = PB6;

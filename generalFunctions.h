@@ -9,7 +9,9 @@ int readClaw() {
    return analogRead(CLAW_SENSOR);
 }
 
-
+bool atIntersection() {
+  return readForkSensor() > AT_FORK;
+}
 
 /*
 int readRightClaw() {

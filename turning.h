@@ -7,10 +7,10 @@ bool turn(int spd, char dir) {
    if (dir == F) return true;
 
 
-   if (dir == L || atWall) {
+   if (dir == L) {
       writeToWheels(-spd, spd);
    }
-   else if (dir == R) {
+   else if (dir == R || atWall) {
       writeToWheels(spd, -spd);
    }
 
