@@ -1,7 +1,7 @@
 //////////////Don't change//////
-const char RACKET_BALL[] = {R, F, F, F, F, F, L, F}; // subject to implementation of raquetball depositing
+const char RACQUET_BALL_PATH[] = {F, R, F, F, F, F, F, L, F}; // subject to implementation of raquetball depositing
 
-const char RACKET_BALL_STEPS = 8;
+const char RACQUET_BALL_STEPS = 9;
 
 
 const char RED_MISSION_1[] = { F, F, R, L, F, F, L, F, L, F, F, F };

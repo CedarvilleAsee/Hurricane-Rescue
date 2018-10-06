@@ -141,6 +141,12 @@ void PT6961::sendMessage(int message)
     lineDisp[2] = 0x54; //n
     lineDisp[3] = 0x79; //E
   }
+  else if(message == RACQUETBALL) {
+    lineDisp[0] = 0x7C; //b
+    lineDisp[1] = 0x77; //A
+    lineDisp[2] = 0x38; //L
+    lineDisp[3] = 0x38; //L
+  }
 
   
   

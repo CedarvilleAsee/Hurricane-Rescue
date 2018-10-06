@@ -10,12 +10,12 @@ const int DIN   = PC15;
 const int SWITCH0 = PA12;
 const int SWITCH1 = PA15; 
 
-//old servos
+//servos
 const int DUMP_SERVO = PA8;
 const int EJECT_SERVO = PA10;
 const int ARM_SERVO = PA9;
-
-   const int CLAW_SERVO = PB6;
+const int CLAW_SERVO = PB6;
+const int RACQUET_BALL_SERVO = PB7;
 
 // Buttons
 const int BUTTON_2 = PB4;//stopbutton

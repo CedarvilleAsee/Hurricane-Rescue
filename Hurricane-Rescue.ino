@@ -44,8 +44,13 @@ void setup() {
   arm.write(ARM_UP);
   claw.attach(CLAW_SERVO);
   claw.write(CLAW_OPEN);
-  dump.attach(DUMP_SERVO);//dump bin
-  dump.write(DONT_DUMP);//to closed position
+  dump.attach(DUMP_SERVO);
+  dump.write(DONT_DUMP);
+
+  
+  racquetArm.attach(RACQUET_BALL_SERVO);
+  racquetArm.write(PUSHER_UP);
+
 }
 
 
@@ -53,7 +58,9 @@ void loop() {
   static int state = -1;
   readLine();
   if(digitalRead(BUTTON_2) == LOW) state = 0;
-    
+  if(state != 7) {
+    racquetArm.write(PUSHER_UP);
+  }
   switch(state) {
 
     case -1:
@@ -79,6 +86,12 @@ void loop() {
       break;
     case 5:
       if(depositPeopleState()) state++;
+      break;
+    case 6:
+      if(followRacquetballState()) state++;
+      break;
+    case 7:
+      if(depositRacquetballState()) state++;
       break;
 
   default:

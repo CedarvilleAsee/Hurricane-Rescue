@@ -12,6 +12,7 @@ Servo dump;
 Servo arm;
 Servo eject;
 Servo claw;
+Servo racquetArm;
 
 //booleans
 bool turning = false;
@@ -27,12 +28,13 @@ char neutralPickup[40];
 int neutralSteps;
 int redSteps;
 
+
 int sensorCounter = 0;
 
 int pickupIndex = 0;
 int redIndex = 0;
 int neutralIndex = 0;
-
+int racquetballIndex =0;
 PT6961 display(DIN, CLOCK, CS);
 
 

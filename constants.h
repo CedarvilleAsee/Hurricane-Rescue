@@ -5,7 +5,7 @@
 //speed constants
 const int SLOW_SPEED = 50;
 const int HALF_SPEED = 50;
-const int FULL_SPEED = 50;
+const int FULL_SPEED = 70;
 const int MAX_SPEED = 80;
 
 //Joel constants
@@ -18,6 +18,7 @@ const int PICKUP_RIGHT = 1;
 const int PICKUP_LEFT = 2;
 const int DEPOSITING = 3;
 const int DONE = 4;
+const int RACQUETBALL = 5;
 
 
 //direction constants
@@ -45,5 +46,8 @@ const int ARM_DOWN = 17;
 
 const int CLAW_OPEN = 80;
 const int CLAW_CLOSE = 52;
+
+const int PUSHER_DOWN = 120;
+const int PUSHER_UP = 180;
 
 #endif

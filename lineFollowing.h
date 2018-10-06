@@ -29,6 +29,10 @@ bool sensorsCentered() {
   return sensors[3] == HIGH && sensors[4] == HIGH;
 }
 
+bool sensorsOnRight() {
+  return sensors[0] == LOW && sensors[1] == HIGH;
+}
+
 void writeWheelDirection(bool ldir, bool rdir) {
   digitalWrite(WHEEL_DIR_LF, ldir);
   digitalWrite(WHEEL_DIR_LB, !ldir);

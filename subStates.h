@@ -109,7 +109,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {
         case 1:
           if(readClaw() < PERSON_CLOSE) {
             clawClose = true;
-            if(delayState(70)) pickupStateIndex++;
+            if(delayState(100)) pickupStateIndex++;
           }
           break;
         case 2:
@@ -173,6 +173,44 @@ bool depositPeopleState(){
       break;
   }
   return false;
+}
+
+
+
+bool followRacquetballState() {
+  display.sendMessage(RACQUETBALL);
+  if(racquetballIndex == RACQUET_BALL_STEPS) return true;
+  if(doTurnSequence(RACQUET_BALL_PATH, racquetballIndex, RACQUET_BALL_STEPS)) racquetballIndex++;
+  return false;
+}
+
+bool depositRacquetballState() {
+  display.sendMessage(RACQUETBALL);
+  static int subIndex = 0;
+  switch(subIndex) {
+    case 0:
+      writeToWheels(-HALF_SPEED, HALF_SPEED);
+      if(sensorsOnRight()) subIndex++;
+      break;
+    case 1:
+      writeToWheels(0, 0);
+      subIndex++;
+      break;
+    case 2:
+      racquetArm.write(PUSHER_DOWN);
+      if(delayState(700)) subIndex++;
+      break;
+    case 3:
+      racquetArm.write(PUSHER_UP);
+      if(delayState(200)) {
+        subIndex = 0;
+        return true;
+      }
+      break;
+        
+  }
+  return false;
+  
 }
 
 bool doneState() {
