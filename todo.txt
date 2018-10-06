@@ -1,12 +1,10 @@
 *request switches for new robot to switch missions
 	electronics team
-1turn before dumping (slightly right)
-	ask solidworks how dumping works
-	make path for going to fire
-		see how depositing will work
 
-2don't lower claw until after almost done with turn
+1don't lower claw until after almost done with turn
 	prevent knocking down people while turning
+2make pickups complete even if no person there
+	wait a certian amount, mihg tbe more if turning
 
 3go faster if next move is forward
 	line 237

@@ -22,7 +22,7 @@ void readLine() {
   for (int i = 0; i < 8; i++ ){
     sensorCounter += sensors[i]<<i;
   }
-  
+  //display.sendNum(sensorCounter);
 }
 
 bool sensorsCentered() {
@@ -59,6 +59,7 @@ void writeToWheels(int ls, int rs) {
 }
 
 bool lineFollow(int ts, int strictness) {
+
   static bool frontPassed = false;
   if(amountSeen >= TURN_AMOUNT){
     if(frontPassed == false) {

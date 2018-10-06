@@ -18,8 +18,8 @@ class PT6961
     void initRAM();
     void sendCmd(char cmd);
     void sendDigit(char digit, char val);
-    void sendNum(int num, char colon);
-    void sendDigits(char digit1, char digit2, char digit3, char digit4, char colon);
+    void sendNum(int num, char colon = 0);
+    void sendDigits(char digit1, char digit2, char digit3, char digit4, char colon = 0);
     void sendMessage(int message);
 	
     const static char _DISPLAY_6X12 = 0x02;

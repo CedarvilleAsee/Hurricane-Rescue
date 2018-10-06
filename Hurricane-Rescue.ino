@@ -39,10 +39,6 @@ void setup() {
 
 
   writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
-
-
-  eject.attach(EJECT_SERVO);
-  eject.write(115);
   
   arm.attach(ARM_SERVO);
   arm.write(ARM_UP);
@@ -54,10 +50,10 @@ void setup() {
 
 
 void loop() {
-
   static int state = -1;
   readLine();
   if(digitalRead(BUTTON_2) == LOW) state = 0;
+    
   switch(state) {
 
     case -1:
@@ -74,9 +70,9 @@ void loop() {
       break;
     case 3: 
     //reset
-        pickupIndex = 0;
-        atWall = false;
-        state++;
+      pickupIndex = 0;
+      atWall = false;
+      state++;
       break;
     case 4:
       if(followNeutralPathState()) state++;

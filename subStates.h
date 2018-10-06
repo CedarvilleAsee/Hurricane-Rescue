@@ -1,20 +1,6 @@
 #ifndef SUBSTATES
 #define SUBSTATES
 
-//non-blocking delay
-bool delayState(int ms) {
-  static int milliseconds = -1;
-  if(milliseconds == -1) {
-    milliseconds = millis();
-  }
-  else if(millis() - milliseconds >= ms) {
-    milliseconds = -1;
-    return true;
-  }
-  return false;
-}
-
-
 // State 0
 //  Waits until the button on board is pushed, go to next state
 bool waitState() {
@@ -147,11 +133,6 @@ void doPickupSequence(const char sequence[], int pathIndex) {
   }
   return;
 }
-
-bool turnAroundState() {
-  return turn(HALF_SPEED, B);
-}
-
 
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
