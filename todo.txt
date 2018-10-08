@@ -3,16 +3,19 @@
 
 1don't lower claw until after almost done with turn
 	prevent knocking down people while turning
+
+
 2make pickups complete even if no person there
 	wait a certian amount, mihg tbe more if turning
 
-3go faster if next move is forward
+3sound creation 
+
+4go faster if next move is forward & no people
 	line 237
 
-4 make code more readable
+5 make code more readable
 	comment everything
 
-5sound creation 
 
 6see if nextion code modifiable for not blocking code
 	see if nextion can be used with blue pill
