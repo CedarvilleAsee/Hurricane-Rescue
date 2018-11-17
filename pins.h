@@ -33,7 +33,8 @@ const int WHEEL_SPEED_R = PB0; //PWMA
 //const int WHEEL_STBY = 33;
 
 // Line sensors
-int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//0 to 7
+//int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//0 to 7
+int LINE_SENSOR[] = {PB3, PA7, PA12, PA15, PA12, PA11, PB10, PB11};
 //Analog
 
 const int FRONT_SENSOR = PA0;

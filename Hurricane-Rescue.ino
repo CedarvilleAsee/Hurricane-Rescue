@@ -11,6 +11,7 @@
 #include "subStates.h"
 
 void setup() {
+  
   display.initDisplay();
   display.sendNum(1234, 1);
   // initialize line sensors
@@ -55,7 +56,7 @@ void setup() {
 
 
 void loop() {
-  static int state = -1;
+  static int state = -2;
   readLine();
   if(digitalRead(BUTTON_2) == LOW) state = 0;
   if(state != 7) {
