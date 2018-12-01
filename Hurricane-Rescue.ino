@@ -18,6 +18,7 @@ void setup() {
   for(int i = 0; i < 8; i++) {
     pinMode(LINE_SENSOR[i], INPUT);
   }
+  
 
   pinMode(FRONT_SENSOR, INPUT);
   pinMode(FORK_SENSOR, INPUT);
@@ -51,6 +52,7 @@ void setup() {
   
   racquetArm.attach(RACQUET_BALL_SERVO);
   racquetArm.write(PUSHER_UP);
+  afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work
 
 }
 
@@ -58,12 +60,11 @@ void setup() {
 void loop() {
   static int state = -2;
   readLine();
-  if(digitalRead(BUTTON_2) == LOW) state = 0;
-  if(state != 7) {
-    racquetArm.write(PUSHER_UP);
-  }
+  //if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
-
+    case -2:
+      
+      break;
     case -1:
       if(displayMissionState()) state++;
       break;

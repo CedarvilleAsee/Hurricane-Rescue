@@ -34,8 +34,9 @@ const int WHEEL_SPEED_R = PB0; //PWMA
 
 // Line sensors
 //int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//0 to 7
-int LINE_SENSOR[] = {PB3, PA7, PA12, PA15, PA12, PA11, PB10, PB11};
+int LINE_SENSOR[] = {PA3, PA4, PA5, PA6, PA7, PA11, PB3, PA12};
 //Analog
+//afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work
 
 const int FRONT_SENSOR = PA0;
 const int FORK_SENSOR = PA2;
