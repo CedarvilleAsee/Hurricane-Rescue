@@ -36,7 +36,7 @@ int redIndex = 0;
 int neutralIndex = 0;
 int racquetballIndex =0;
 PT6961 display(DIN, CLOCK, CS);
-Adafruit_SSD1306 oledDisplay(OLED_RESET);
+
 
 
 #endif

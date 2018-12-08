@@ -3,7 +3,6 @@
 
 // Populates the sensors[] variable so that we know amountSeen
 void readLine() {
-  while(1){
   amountSeen = 0;
   lastLineIndex = -1;
   for(int i = 7; i >= 0; --i) {
@@ -26,8 +25,7 @@ void readLine() {
   for (int i = 0; i < 8; i++ ){
     sensorCounter += sensors[i]<<i;
   }
-  display.sendNum(sensorCounter);
-  }
+    display.sendNum(sensorCounter);
 }
 
 bool sensorsCentered() {

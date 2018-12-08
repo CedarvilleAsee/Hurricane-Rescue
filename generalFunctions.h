@@ -5,23 +5,18 @@ int readForkSensor() {
    return analogRead(FORK_SENSOR);
 }
 
-int readClaw() {
-   return analogRead(CLAW_SENSOR);
-}
-
 bool atIntersection() {
   return readForkSensor() > AT_FORK;
 }
 
-/*
 int readRightClaw() {
-   return analogRead(L_CLAW_SENSOR);
+   return analogRead(CLAW_SENSOR_RIGHT);
 }
  
 int readLeftClaw() {
-   return analogRead(L_CLAW_SENSOR);
+   return analogRead(CLAW_SENSOR_LEFT);
 }
-*/
+
 
 bool delayState(int ms) {
   static int milliseconds = -1;

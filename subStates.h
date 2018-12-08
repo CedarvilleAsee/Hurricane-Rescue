@@ -49,7 +49,7 @@ bool waitState() {
 }
 
 
-void doPickupSequence(const char sequence[], int pathIndex) {
+void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of clawCLose stuff
   static int pickupStateIndex = 0;
   static bool atNextSquare = true;
   static int prevIndex = pathIndex;
@@ -99,29 +99,29 @@ void doPickupSequence(const char sequence[], int pathIndex) {
     }
     else if(sequence[pathIndex] == R) {
       display.sendMessage(PICKUP_RIGHT);
-      if(clawClose) claw.write(CLAW_CLOSE);
+      if(clawClose) rightClaw.write(RIGHT_CLAW_CLOSE);
       switch(pickupStateIndex) {
         case 0:
-          arm.write(ARM_DOWN);
+          rightArm.write(RIGHT_ARM_DOWN);
           if(delayState(80))
           pickupStateIndex++;
           break;
         case 1:
-          if(readClaw() < PERSON_CLOSE) {
+          if(readRightClaw() < PERSON_CLOSE_RIGHT) {
             clawClose = true;
-            if(delayState(100)) pickupStateIndex++;
+            if(delayState(100)) pickupStateIndex++;//this nested if isnt good
           }
           break;
         case 2:
-          arm.write(ARM_UP);
+          rightArm.write(RIGHT_ARM_UP);
           if(delayState(500)) {
             clawClose = false;
-            claw.write(CLAW_OPEN);
+            rightClaw.write(RIGHT_CLAW_OPEN);
             pickupStateIndex++;
           }
           break;
         case 3:
-          claw.write(CLAW_OPEN);
+          rightClaw.write(RIGHT_CLAW_OPEN);
           if(delayState(10)){
             pickupStateIndex = 0;
             atNextSquare = false;
@@ -151,7 +151,6 @@ bool followNeutralPathState() {
 bool depositPeopleState(){
   static int depositIndex = 0;
   display.sendMessage(DEPOSITING);
-  arm.write(ARM_MIDDLE);
   switch(depositIndex) {
     case 0:
       turn(HALF_SPEED, R);
@@ -175,43 +174,6 @@ bool depositPeopleState(){
   return false;
 }
 
-
-
-bool followRacquetballState() {
-  display.sendMessage(RACQUETBALL);
-  if(racquetballIndex == RACQUET_BALL_STEPS) return true;
-  if(doTurnSequence(RACQUET_BALL_PATH, racquetballIndex, RACQUET_BALL_STEPS)) racquetballIndex++;
-  return false;
-}
-
-bool depositRacquetballState() {
-  display.sendMessage(RACQUETBALL);
-  static int subIndex = 0;
-  switch(subIndex) {
-    case 0:
-      writeToWheels(-HALF_SPEED, HALF_SPEED);
-      if(sensorsOnRight()) subIndex++;
-      break;
-    case 1:
-      writeToWheels(0, 0);
-      subIndex++;
-      break;
-    case 2:
-      racquetArm.write(PUSHER_DOWN);
-      if(delayState(700)) subIndex++;
-      break;
-    case 3:
-      racquetArm.write(PUSHER_UP);
-      if(delayState(200)) {
-        subIndex = 0;
-        return true;
-      }
-      break;
-        
-  }
-  return false;
-  
-}
 
 bool doneState() {
    display.sendMessage(DONE);

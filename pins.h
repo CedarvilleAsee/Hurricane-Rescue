@@ -39,7 +39,7 @@ int LINE_SENSOR[] = {PA4, PA5, PA6, PA7, PB3, PA15, PB10, PB11};
 
 //afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work
 
-const int DISTANCE_SENSOR = PA3;
+const int FRONT_SENSOR = PA3;
 const int FORK_SENSOR = PA2;
 
 const int CLAW_SENSOR_RIGHT = PA0;

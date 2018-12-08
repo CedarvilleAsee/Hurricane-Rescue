@@ -32,22 +32,27 @@ const char E = '0';
 const bool WHEEL_FORWARDS   = true;
 const bool WHEEL_BACKWARDS  = false;
 
-const int DO_DUMP = 100;
-const int DONT_DUMP = 15;
+const int DO_DUMP = 53;//ok
+const int DONT_DUMP = 15;//ok
 
-const int PERSON_CLOSE = 2000;
+const int PERSON_CLOSE_RIGHT = 90;//ok
 
-const int WALL_CLOSE = 400; //300 for speed 50
+const int WALL_CLOSE = 400;
 const int AT_FORK = 2500;
 
-const int ARM_UP = 130;
-const int ARM_MIDDLE = 100;
-const int ARM_DOWN = 17;
+const int RIGHT_ARM_UP = 130;//ok
+const int RIGHT_ARM_START = 100;//ok
+const int RIGHT_ARM_DOWN = 44;//ok
 
-const int CLAW_OPEN = 80;
-const int CLAW_CLOSE = 52;
+const int LEFT_ARM_UP = 130;
+const int LEFT_ARM_START = 100;
+const int LEFT_ARM_DOWN = 17;
 
-const int PUSHER_DOWN = 120;
-const int PUSHER_UP = 180;
+const int RIGHT_CLAW_OPEN = 100;//ok
+const int RIGHT_CLAW_CLOSE = 71;//ok
+
+const int LEFT_CLAW_OPEN = 80;
+const int LEFT_CLAW_CLOSE = 52;
+
 
 #endif

@@ -14,6 +14,8 @@
 
 void setup() {
   oledDisplay.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  oledDisplay.display();
+  oledDisplay.clearDisplay();
   oledDisplay.setTextSize(2);
   oledDisplay.setTextColor(WHITE);
   
@@ -46,17 +48,20 @@ void setup() {
 
   rightArm.attach(ARM_SERVO_RIGHT);
   rightArm.write(RIGHT_ARM_START);
+  
   leftArm.attach(ARM_SERVO_LEFT);
   leftArm.write(LEFT_ARM_START);
+  
   rightClaw.attach(CLAW_SERVO_RIGHT);
   rightClaw.write(RIGHT_CLAW_OPEN);
+  
   leftClaw.attach(CLAW_SERVO_LEFT);
   leftClaw.write(LEFT_CLAW_OPEN);
+  
   dump.attach(DUMP_SERVO);
   dump.write(DONT_DUMP);
   
   afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work
-
 }
 
 
@@ -66,9 +71,40 @@ void loop() {
   //if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
     case -2:
-        oledDisplay.clearDisplay();
-        oledDisplay.print("hello");
-        oledDisplay.display();
+        display.sendNum(readRightClaw());
+        printNum(50);
+        display.sendMessage(PICKUP_RIGHT);
+        static int pickupStateIndex = 0;
+        static bool clawClose = false;
+        //if(clawClose) rightClaw.write(RIGHT_CLAW_CLOSE);
+        switch(pickupStateIndex) {
+        case 0:
+          rightArm.write(RIGHT_ARM_DOWN);
+          if(delayState(80))
+          pickupStateIndex++;
+          break;
+        case 1:
+          if(readRightClaw() < PERSON_CLOSE_RIGHT) {
+            rightClaw.write(RIGHT_CLAW_CLOSE);
+            if(delayState(100)) pickupStateIndex++;
+          }
+          break;
+        case 2:
+          rightArm.write(RIGHT_ARM_UP);
+          if(delayState(500)) {
+            //clawClose = false;
+            rightClaw.write(RIGHT_CLAW_OPEN);
+            pickupStateIndex++;
+          }
+          break;
+        case 3:
+          rightClaw.write(RIGHT_CLAW_OPEN);
+          if(delayState(10)){
+            pickupStateIndex = 0;
+            return;
+          }
+          break;
+        }
       break;
     case -1:
       if(displayMissionState()) state++;
@@ -93,12 +129,6 @@ void loop() {
       break;
     case 5:
       if(depositPeopleState()) state++;
-      break;
-    case 6:
-      if(followRacquetballState()) state++;
-      break;
-    case 7:
-      if(depositRacquetballState()) state++;
       break;
 
   default:
