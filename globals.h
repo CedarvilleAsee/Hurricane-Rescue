@@ -9,10 +9,10 @@ int amountSeen     = 0;
 
 //Servos
 Servo dump;
-Servo arm;
-Servo eject;
-Servo claw;
-Servo racquetArm;
+Servo rightArm;
+Servo rightClaw;
+Servo leftArm;
+Servo leftClaw;
 
 //booleans
 bool turning = false;
@@ -36,7 +36,7 @@ int redIndex = 0;
 int neutralIndex = 0;
 int racquetballIndex =0;
 PT6961 display(DIN, CLOCK, CS);
-
+Adafruit_SSD1306 oledDisplay(OLED_RESET);
 
 
 #endif

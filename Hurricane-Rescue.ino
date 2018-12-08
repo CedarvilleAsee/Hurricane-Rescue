@@ -4,13 +4,18 @@
 #include "constants.h"
 #include "missions.h"
 #include "PT6961.h"
+#include "display.h"
 #include "globals.h"
 #include "generalFunctions.h"
 #include "lineFollowing.h"
 #include "turning.h"
 #include "subStates.h"
 
+
 void setup() {
+  oledDisplay.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  oledDisplay.setTextSize(2);
+  oledDisplay.setTextColor(WHITE);
   
   display.initDisplay();
   display.sendNum(1234, 1);
@@ -29,9 +34,6 @@ void setup() {
   pinMode(WHEEL_DIR_RB, OUTPUT);
   pinMode(WHEEL_DIR_RF, OUTPUT);
 
-  //pinMode(LEDY, OUTPUT);
-  //pinMode(LEDG, OUTPUT);
-
   pinMode(WHEEL_SPEED_L, OUTPUT);
   pinMode(WHEEL_SPEED_R, OUTPUT);
 
@@ -41,17 +43,18 @@ void setup() {
 
 
   writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
-  
-  arm.attach(ARM_SERVO);
-  arm.write(ARM_UP);
-  claw.attach(CLAW_SERVO);
-  claw.write(CLAW_OPEN);
+
+  rightArm.attach(ARM_SERVO_RIGHT);
+  rightArm.write(RIGHT_ARM_START);
+  leftArm.attach(ARM_SERVO_LEFT);
+  leftArm.write(LEFT_ARM_START);
+  rightClaw.attach(CLAW_SERVO_RIGHT);
+  rightClaw.write(RIGHT_CLAW_OPEN);
+  leftClaw.attach(CLAW_SERVO_LEFT);
+  leftClaw.write(LEFT_CLAW_OPEN);
   dump.attach(DUMP_SERVO);
   dump.write(DONT_DUMP);
-
   
-  racquetArm.attach(RACQUET_BALL_SERVO);
-  racquetArm.write(PUSHER_UP);
   afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work
 
 }
@@ -63,7 +66,9 @@ void loop() {
   //if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
     case -2:
-      
+        oledDisplay.clearDisplay();
+        oledDisplay.print("hello");
+        oledDisplay.display();
       break;
     case -1:
       if(displayMissionState()) state++;
