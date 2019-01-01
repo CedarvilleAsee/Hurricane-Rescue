@@ -6,10 +6,6 @@ const int CS    = PC13;
 const int CLOCK = PC14;
 const int DIN   = PC15;
 
-//mission switches
-const int SWITCH0 = PA12;
-const int SWITCH1 = PA15; 
-
 //servos
 const int DUMP_SERVO = PA10;
 const int ARM_SERVO_LEFT = PA8;
@@ -33,8 +29,11 @@ const int WHEEL_SPEED_R = PB0; //PWMA
 //const int WHEEL_STBY = 33;
 
 // Line sensors
-//int LINE_SENSOR[] = {PA6, PA7, PB9, PA4, PA5, PA11, PB10, PB11};//0 to 7
+
 int LINE_SENSOR[] = {PA4, PA5, PA6, PA7, PB3, PA15, PB10, PB11};
+//int LINE_SENSOR[] = {PB11, PB10, PA15, PB3, PA7, PA6, PA5, PA4};
+
+
 //Analog
 
 //afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work

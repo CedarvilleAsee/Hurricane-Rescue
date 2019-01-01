@@ -16,4 +16,27 @@ void printNum(int num){
 }
 
 
+void displayMission(int num){
+  oledDisplay.clearDisplay();
+  oledDisplay.setCursor(0,0);
+  oledDisplay.print("Mission: ");
+  oledDisplay.println(num);
+  oledDisplay.display();
+}
+
+void printDebugging() {
+  oledDisplay.clearDisplay();
+  oledDisplay.setCursor(0,0);
+  oledDisplay.print("RClaw:");
+  oledDisplay.println(readRightClaw());
+  oledDisplay.print("LClaw:");
+  oledDisplay.println(readLeftClaw());
+  oledDisplay.print("Fork :");
+  oledDisplay.println(readForkSensor());
+  oledDisplay.print("Front:");
+  oledDisplay.println(readFrontSensor());
+  oledDisplay.display();
+}
+
+
 

@@ -4,9 +4,9 @@
 #include "constants.h"
 #include "missions.h"
 #include "PT6961.h"
-#include "display.h"
 #include "globals.h"
 #include "generalFunctions.h"
+#include "display.h"
 #include "lineFollowing.h"
 #include "turning.h"
 #include "subStates.h"
@@ -64,53 +64,18 @@ void setup() {
   afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work
 }
 
-
 void loop() {
   static int state = -2;
   readLine();
   //if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
     case -2:
-        display.sendNum(readRightClaw());
-        printNum(50);
-        display.sendMessage(PICKUP_RIGHT);
-        static int pickupStateIndex = 0;
-        static bool clawClose = false;
-        //if(clawClose) rightClaw.write(RIGHT_CLAW_CLOSE);
-        switch(pickupStateIndex) {
-        case 0:
-          rightArm.write(RIGHT_ARM_DOWN);
-          if(delayState(80))
-          pickupStateIndex++;
-          break;
-        case 1:
-          if(readRightClaw() < PERSON_CLOSE_RIGHT) {
-            rightClaw.write(RIGHT_CLAW_CLOSE);
-            if(delayState(100)) pickupStateIndex++;
-          }
-          break;
-        case 2:
-          rightArm.write(RIGHT_ARM_UP);
-          if(delayState(500)) {
-            //clawClose = false;
-            rightClaw.write(RIGHT_CLAW_OPEN);
-            pickupStateIndex++;
-          }
-          break;
-        case 3:
-          rightClaw.write(RIGHT_CLAW_OPEN);
-          if(delayState(10)){
-            pickupStateIndex = 0;
-            return;
-          }
-          break;
-        }
+      if(pickMissionState()) state++;//press button2 to switch mission, button 1 to select
       break;
     case -1:
-      if(displayMissionState()) state++;
-      break;
+      if(displayMissionState()) state++; // button 2 to advance
     case 0:
-      if(waitState())  state++;
+      if(waitState()) state++; // button 1 to start
       break;
     case 1:
       if(followRedPathState())  state++;
@@ -119,7 +84,7 @@ void loop() {
       if(depositPeopleState())  state++;
       break;
     case 3: 
-    //reset
+    //reset for second half
       pickupIndex = 0;
       atWall = false;
       state++;

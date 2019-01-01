@@ -3,10 +3,10 @@
 #define CONSTANTS
 
 //speed constants
-const int SLOW_SPEED = 50;
 const int HALF_SPEED = 50;
 const int FULL_SPEED = 70;
 const int MAX_SPEED = 80;
+const int LINE_STRICTNESS = 20;
 
 //Joel constants
 const int TARGET_INDEX = 4;
@@ -35,13 +35,13 @@ const bool WHEEL_BACKWARDS  = false;
 const int DO_DUMP = 53;//ok
 const int DONT_DUMP = 15;//ok
 
-const int PERSON_CLOSE_RIGHT = 90;//ok
+const int PERSON_CLOSE_RIGHT = 40;//ok
 
-const int WALL_CLOSE = 400;
+const int WALL_CLOSE = 300;
 const int AT_FORK = 2500;
 
 const int RIGHT_ARM_UP = 130;//ok
-const int RIGHT_ARM_START = 100;//ok
+const int RIGHT_ARM_START = 95;//ok
 const int RIGHT_ARM_DOWN = 44;//ok
 
 const int LEFT_ARM_UP = 130;

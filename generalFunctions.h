@@ -5,6 +5,10 @@ int readForkSensor() {
    return analogRead(FORK_SENSOR);
 }
 
+bool isAtWall() {
+  return readFrontSensor() < WALL_CLOSE;
+}
+
 bool atIntersection() {
   return readForkSensor() > AT_FORK;
 }

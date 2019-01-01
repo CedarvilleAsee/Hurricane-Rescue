@@ -38,15 +38,15 @@ bool turn(int spd, char dir) {
 }
 
 bool doTurnSequence(const char sequence[], int index, int maxSteps) {
-   index++; // should be acting on next instruction, not current
-   if (index == maxSteps) {
+   int temp = index + 1; // should be acting on next instruction, not current
+   if (temp == maxSteps) {
       if (lineFollow(FULL_SPEED, 20)) {
          return true;
       }
    }
    else {
       if (turning) {
-         if (turn(HALF_SPEED, sequence[index])) {
+         if (turn(HALF_SPEED, sequence[temp])) {
             turning = false;
             return true;
          }

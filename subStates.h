@@ -6,11 +6,13 @@
 bool waitState() {
   //for centering robot
   display.sendNum(sensorCounter, 0);
+  printDebugging();
   //keeps the robot still
   writeToWheels(0, 0);
   //when started, copy missions into globals
   if(digitalRead(BUTTON_1) == LOW) {
     //get mission number from switches
+    missionNum = 4;
     if(missionNum == 1) {
       strncpy(redPath, RED_MISSION_1, RED_STEPS_1);
       strncpy(neutralPath, NEUTRAL_MISSION_1, NEUTRAL_STEPS_1);
@@ -48,6 +50,32 @@ bool waitState() {
   return false;
 }
 
+bool pickMissionState() {
+  displayMission(missionNum);
+  if (digitalRead(BUTTON_2) == LOW){
+    missionNum++;
+    if (missionNum == 5) {
+      missionNum = 1
+    }
+    while (digitalRead(BUTTON_2) == LOW);
+  }
+  if (digitalRead(BUTTON_1) == LOW) {
+    while(digitalRead(BUTTON_1) == LOW);
+    return true;
+  }
+  displayMission(missionNum);
+  return false
+}
+
+bool displayMissionState() {
+  if(digitalRead(BUTTON_2) == LOW){
+    while(digitalRead(BUTTON_2) == LOW);
+    return true;
+  }
+  displayMission(missionNum);
+  return false;
+}
+
 
 void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of clawCLose stuff
   static int pickupStateIndex = 0;
@@ -60,75 +88,89 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
   }
   if(atNextSquare){
     if(sequence[pathIndex] == E) {
-      display.sendMessage(PICKUP_EMPTY);
+      //display.sendMessage(PICKUP_EMPTY);
       atNextSquare = false;
       return;
     }
     else if(sequence[pathIndex] == L) {
       display.sendMessage(PICKUP_LEFT);
-        atNextSquare = false; //temp
-        return;//temp
-      /*switch(pickupStateIndex) {
-        case 0:
-          leftClawArm.write(L_DOWN_POS);
-          if(delayState(400)) pickupStateIndex++;
-          break;
-        case 1:
-          if(readLeftClaw() < PERSON_CLOSE) {
-            leftClaw.write(L_CLOSE);
-            if(delayState(100)) pickupStateIndex++;
-          }
-          break;
-        case 2:
-          leftClawArm.write(L_UP_POS);
-          if(delayState(400)) pickupStateIndex++;
-          break;
-        case 3:
-          leftClaw.write(L_OPEN);
-          if(delayState(100)) {
-            pickupStateIndex = 0;
-            atNextSquare = false;
-            return;
-          }
-          break;
-        default:
-          leftClawArm.write(L_UP_POS);
-          leftClaw.write(L_OPEN);
-          break;
-      }*/
+      display.sendNum(readLeftClaw());
+      static int pickupStateIndex = 0;
+      static bool clawClose = false;
+      switch(pickupStateIndex) {
+      case 0:
+        leftArm.write(LEFT_ARM_DOWN);
+        if(delayState(80))
+        pickupStateIndex++;
+        break;
+      case 1:
+        if(readLeftClaw() < PERSON_CLOSE_LEFT) {
+          leftClaw.write(LEFT_CLAW_CLOSE);
+          pickupStateIndex++;
+        }
+        break;
+      case 2:
+        if(delayState(100)) pickupStateIndex++;
+        break;
+      case 3:
+        leftArm.write(LEFT_ARM_UP);
+        if(delayState(500)) {
+          rightClaw.write(LEFT_CLAW_OPEN);
+          pickupStateIndex++;
+        }
+        break;
+      case 4:
+        leftClaw.write(LEFT_CLAW_OPEN);
+        leftArm.write(LEFT_ARM_START);
+        if(delayState(10)){
+          pickupStateIndex = 0;
+          atNextSquare = false;
+          return;
+        }
+        break;
+      }
     }
     else if(sequence[pathIndex] == R) {
       display.sendMessage(PICKUP_RIGHT);
-      if(clawClose) rightClaw.write(RIGHT_CLAW_CLOSE);
-      switch(pickupStateIndex) {
+      display.sendNum(readRightClaw());
+        //display.sendMessage(PICKUP_RIGHT);
+        static int pickupStateIndex = 0;
+        static bool clawClose = false;
+        //if(clawClose) rightClaw.write(RIGHT_CLAW_CLOSE);
+        switch(pickupStateIndex) {
         case 0:
           rightArm.write(RIGHT_ARM_DOWN);
           if(delayState(80))
           pickupStateIndex++;
           break;
         case 1:
+        
           if(readRightClaw() < PERSON_CLOSE_RIGHT) {
-            clawClose = true;
-            if(delayState(100)) pickupStateIndex++;//this nested if isnt good
+            rightClaw.write(RIGHT_CLAW_CLOSE);
+            pickupStateIndex++;
           }
           break;
         case 2:
+          if(delayState(100)) pickupStateIndex++;
+          break;
+        case 3:
           rightArm.write(RIGHT_ARM_UP);
           if(delayState(500)) {
-            clawClose = false;
+            //clawClose = false;
             rightClaw.write(RIGHT_CLAW_OPEN);
             pickupStateIndex++;
           }
           break;
-        case 3:
+        case 4:
           rightClaw.write(RIGHT_CLAW_OPEN);
+          rightArm.write(RIGHT_ARM_START);
           if(delayState(10)){
             pickupStateIndex = 0;
             atNextSquare = false;
             return;
           }
           break;
-      }
+        }
     }
   }
   return;
@@ -144,7 +186,7 @@ bool followRedPathState() {
 bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
   if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
-  doPickupSequence(neutralPickup, pickupIndex);
+  //doPickupSequence(neutralPickup, pickupIndex);
   return false;
 }
 
@@ -154,7 +196,7 @@ bool depositPeopleState(){
   switch(depositIndex) {
     case 0:
       turn(HALF_SPEED, R);
-      if(atIntersection()){
+      if(sensorCounter == 192){
         writeToWheels(0, 0);
         depositIndex++;
       }
@@ -174,36 +216,13 @@ bool depositPeopleState(){
   return false;
 }
 
-
 bool doneState() {
    display.sendMessage(DONE);
    writeToWheels(0, 0);
    return false;
 }
 
-bool displayMissionState() {
-  display.sendNum(missionNum, 1);
-  if(digitalRead(SWITCH1) == HIGH) {
-    if(digitalRead(SWITCH0) == HIGH) {
-      missionNum = 4;
-    }
-    else {
-      missionNum = 3;
-    }
-  }
-  else {
-    if(digitalRead(SWITCH0) == HIGH) {
-      missionNum = 2;
-    }
-    else {
-      missionNum = 1;
-    }
-  }
-  if(digitalRead(BUTTON_2) == LOW) {
-    return true;
-  }
-  return false;
-}
+
 
 #endif
 
