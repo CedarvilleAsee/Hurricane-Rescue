@@ -24,6 +24,15 @@ void displayMission(int num){
   oledDisplay.display();
 }
 
+void displayMissionConfirmation(int num){
+  oledDisplay.clearDisplay();
+  oledDisplay.setCursor(0,0);
+  oledDisplay.print("Mission: ");
+  oledDisplay.println(num);
+  oledDisplay.println("Verify");
+  oledDisplay.display();
+}
+
 void printDebugging() {
   oledDisplay.clearDisplay();
   oledDisplay.setCursor(0,0);

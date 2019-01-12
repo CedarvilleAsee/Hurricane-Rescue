@@ -72,7 +72,7 @@ bool displayMissionState() {
     while(digitalRead(BUTTON_2) == LOW);
     return true;
   }
-  displayMission(missionNum);
+  displayMissionConfirmation(missionNum);
   return false;
 }
 
@@ -101,7 +101,7 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
       case 0:
         leftArm.write(LEFT_ARM_DOWN);
         if(delayState(80))
-        pickupStateIndex++;
+          pickupStateIndex++;
         break;
       case 1:
         if(readLeftClaw() < PERSON_CLOSE_LEFT) {

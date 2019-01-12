@@ -31,8 +31,6 @@ const int WHEEL_SPEED_R = PB0; //PWMA
 // Line sensors
 
 int LINE_SENSOR[] = {PA4, PA5, PA6, PA7, PB3, PA15, PB10, PB11};
-//int LINE_SENSOR[] = {PB11, PB10, PA15, PB3, PA7, PA6, PA5, PA4};
-
 
 //Analog
 
