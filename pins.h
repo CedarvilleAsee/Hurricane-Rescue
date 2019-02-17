@@ -26,10 +26,10 @@ const int WHEEL_DIR_RF = PB12;//AIN2
 const int WHEEL_SPEED_L = PB1; //PWMB
 const int WHEEL_SPEED_R = PB0; //PWMA
 
-//const int WHEEL_STBY = 33;
 
 // Line sensors
 
+//left to right is 7 to 0
 int LINE_SENSOR[] = {PA4, PA5, PA6, PA7, PB3, PA15, PB10, PB11};
 
 //Analog

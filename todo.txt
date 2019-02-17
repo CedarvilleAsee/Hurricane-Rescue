@@ -1,4 +1,8 @@
-1 fix arm down too early
+claw could be longer to have more opportunity to grab person
+
+claw material on the inside would be better if it could deform a little to grab 
+
+
 
 
 

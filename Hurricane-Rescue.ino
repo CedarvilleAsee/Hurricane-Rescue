@@ -29,6 +29,8 @@ void setup() {
 
   pinMode(FRONT_SENSOR, INPUT);
   pinMode(FORK_SENSOR, INPUT);
+  pinMode(CLAW_SENSOR_RIGHT, INPUT);
+  pinMode(CLAW_SENSOR_LEFT, INPUT);  
 
  // initialize motor controllers
   pinMode(WHEEL_DIR_LB, OUTPUT);
@@ -39,10 +41,9 @@ void setup() {
   pinMode(WHEEL_SPEED_L, OUTPUT);
   pinMode(WHEEL_SPEED_R, OUTPUT);
 
-  //pinMode(WHEEL_STBY, OUTPUT);
 
   pinMode(BUTTON_1, INPUT_PULLUP);
-
+  pinMode(BUTTON_2, INPUT_PULLUP);
 
   writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
 
@@ -65,6 +66,7 @@ void setup() {
 }
 
 void loop() {
+  
   static int state = -2;
   readLine();
   //if(digitalRead(BUTTON_2) == LOW) state = 0;
@@ -74,6 +76,7 @@ void loop() {
       break;
     case -1:
       if(displayMissionState()) state++; // button 2 to advance
+      break;
     case 0:
       if(waitState()) state++; // button 1 to start
       break;

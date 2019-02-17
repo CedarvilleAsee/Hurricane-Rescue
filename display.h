@@ -19,6 +19,8 @@ void printNum(int num){
 void displayMission(int num){
   oledDisplay.clearDisplay();
   oledDisplay.setCursor(0,0);
+  oledDisplay.println("Selection");
+  oledDisplay.println("");
   oledDisplay.print("Mission: ");
   oledDisplay.println(num);
   oledDisplay.display();
@@ -27,9 +29,10 @@ void displayMission(int num){
 void displayMissionConfirmation(int num){
   oledDisplay.clearDisplay();
   oledDisplay.setCursor(0,0);
+  oledDisplay.println("Confirm");
+  oledDisplay.println("");
   oledDisplay.print("Mission: ");
   oledDisplay.println(num);
-  oledDisplay.println("Verify");
   oledDisplay.display();
 }
 

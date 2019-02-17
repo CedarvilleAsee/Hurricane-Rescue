@@ -19,8 +19,6 @@ void readLine() {
   }
 
   sensorCounter = 0;
-
-    
   
   for (int i = 0; i < 8; i++ ){
     sensorCounter += sensors[i]<<i;

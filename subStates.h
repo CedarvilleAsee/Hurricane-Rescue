@@ -55,7 +55,7 @@ bool pickMissionState() {
   if (digitalRead(BUTTON_2) == LOW){
     missionNum++;
     if (missionNum == 5) {
-      missionNum = 1
+      missionNum = 1;
     }
     while (digitalRead(BUTTON_2) == LOW);
   }
@@ -64,7 +64,7 @@ bool pickMissionState() {
     return true;
   }
   displayMission(missionNum);
-  return false
+  return false;
 }
 
 bool displayMissionState() {
@@ -92,11 +92,22 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
       atNextSquare = false;
       return;
     }
-    else if(sequence[pathIndex] == L) {
-      display.sendMessage(PICKUP_LEFT);
-      display.sendNum(readLeftClaw());
+    else if(redPath[pathIndex] == L) {
+      //display.sendMessage(PICKUP_LEFT);
+      //display.sendNum(readLeftClaw());
       static int pickupStateIndex = 0;
       static bool clawClose = false;
+/*
+      //potential fix for early claw deployment
+      if(redPath[pathIndex] != F) {
+        //wait till turn completes
+        if(!turning){
+          return;
+        }
+      }
+      */
+      
+      
       switch(pickupStateIndex) {
       case 0:
         leftArm.write(LEFT_ARM_DOWN);
@@ -131,8 +142,8 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
       }
     }
     else if(sequence[pathIndex] == R) {
-      display.sendMessage(PICKUP_RIGHT);
-      display.sendNum(readRightClaw());
+      //display.sendMessage(PICKUP_RIGHT);
+      //display.sendNum(readRightClaw());
         //display.sendMessage(PICKUP_RIGHT);
         static int pickupStateIndex = 0;
         static bool clawClose = false;
