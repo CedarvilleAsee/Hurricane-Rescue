@@ -4,7 +4,7 @@
 
 //speed constants
 const int HALF_SPEED = 50;
-const int FULL_SPEED = 70;
+const int FULL_SPEED = 100;
 const int MAX_SPEED = 80;
 const int LINE_STRICTNESS = 20;
 
@@ -35,7 +35,7 @@ const bool WHEEL_BACKWARDS  = false;
 const int DO_DUMP = 53;//53 dump
 const int DONT_DUMP = 15;//15 dont dump
 
-const int PERSON_CLOSE_RIGHT = 30;//30right
+const int PERSON_CLOSE_RIGHT = 20;//30right
 const int PERSON_CLOSE_LEFT = 2600;//2600left
 
 const int WALL_CLOSE = 300;//300 wall
@@ -52,7 +52,7 @@ const int LEFT_ARM_WAIT = 72;//72 wait
 const int LEFT_ARM_DOWN = 117;//117 down
 
 const int RIGHT_CLAW_OPEN = 100;//100 open
-const int RIGHT_CLAW_CLOSE = 75;//75 close
+const int RIGHT_CLAW_CLOSE = 70;//75 close
 
 const int LEFT_CLAW_OPEN = 115;//115 open
 const int LEFT_CLAW_CLOSE = 75;//85 close
