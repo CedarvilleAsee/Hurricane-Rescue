@@ -48,16 +48,16 @@ void setup() {
   writeWheelDirection(WHEEL_FORWARDS, WHEEL_FORWARDS);
 
   rightArm.attach(ARM_SERVO_RIGHT);
-  rightArm.write(RIGHT_ARM_DOWN);
+  rightArm.write(RIGHT_ARM_START);
   
   leftArm.attach(ARM_SERVO_LEFT);
-  leftArm.write(LEFT_ARM_DOWN);
+  leftArm.write(LEFT_ARM_START);
   
   rightClaw.attach(CLAW_SERVO_RIGHT);
-  rightClaw.write(RIGHT_CLAW_OPEN);
+  rightClaw.write(RIGHT_CLAW_CLOSE);
   
   leftClaw.attach(CLAW_SERVO_LEFT);
-  leftClaw.write(LEFT_CLAW_OPEN);
+  leftClaw.write(LEFT_CLAW_CLOSE);
   
   dump.attach(DUMP_SERVO);
   dump.write(DONT_DUMP);
@@ -69,53 +69,22 @@ void loop() {
   
   static int state = -2;
   readLine();
-  //if(digitalRead(BUTTON_2) == LOW) state = 0;
   switch(state) {
     case -2:
       if(pickMissionState()) state++;//press button2 to switch mission, button 1 to select
       break;
     case -1:
-      //if(displayMissionState()) state++; // button 2 to advance
-      static int pickupStateIndex = 0;
-      switch(pickupStateIndex) {
-      case 0:
-        rightArm.write(RIGHT_ARM_DOWN);
-        if(delayState(80))
-          pickupStateIndex++;
-        break;
-      case 1:
-        if(readRightClaw() < PERSON_CLOSE_RIGHT) {
-          rightClaw.write(RIGHT_CLAW_CLOSE);
-          pickupStateIndex++;
-        }
-        break;
-      case 2:
-        if(delayState(250)) pickupStateIndex++;
-        break;
-      case 3:
-        rightArm.write(RIGHT_ARM_UP);
-        if(delayState(400)) {
-          rightClaw.write(RIGHT_CLAW_OPEN);
-          pickupStateIndex++;
-        }
-        break;
-      case 4:
-        if(delayState(200)) pickupStateIndex++;
-        break;
-      case 5:
-        rightClaw.write(RIGHT_CLAW_OPEN);
-        rightArm.write(RIGHT_ARM_WAIT);
-        if(delayState(10)){
-          pickupStateIndex = 0;
-          state++;
-        }
-        break;
-      }
+      if(displayMissionState()) state++; // button 2 to advance
       break;
     case 0:
-      if(waitState()) state++; // button 1 to start
+      if(waitState()) {
+        state++; // button 1 to start
+        rightArm.write(RIGHT_ARM_WAIT);
+        leftArm.write(LEFT_ARM_WAIT);
+      }
       break;
     case 1:
+      
       if(followRedPathState())  state++;
       break;
     case 2:
@@ -125,7 +94,7 @@ void loop() {
     //reset for second half
       pickupIndex = 0;
       atWall = false;
-      state++;
+      state=0;
       break;
     case 4:
       if(followNeutralPathState()) state++;

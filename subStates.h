@@ -12,7 +12,6 @@ bool waitState() {
   //when started, copy missions into globals
   if(digitalRead(BUTTON_1) == LOW) {
     //get mission number from switches
-    missionNum = 4;
     if(missionNum == 1) {
       strncpy(redPath, RED_MISSION_1, RED_STEPS_1);
       strncpy(neutralPath, NEUTRAL_MISSION_1, NEUTRAL_STEPS_1);
@@ -88,29 +87,19 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
   }
   if(atNextSquare){
     if(sequence[pathIndex] == E) {
-      //display.sendMessage(PICKUP_EMPTY);
+      display.sendMessage(PICKUP_EMPTY);
       atNextSquare = false;
       return;
     }
-    else if(redPath[pathIndex] == L) {
-      //display.sendMessage(PICKUP_LEFT);
+    else if(sequence[pathIndex] == L) {
+      display.sendMessage(PICKUP_LEFT);
       //display.sendNum(readLeftClaw());
       static int pickupStateIndex = 0;
       static bool clawClose = false;
-/*
-      //potential fix for early claw deployment
-      if(redPath[pathIndex] != F) {
-        //wait till turn completes
-        if(!turning){
-          return;
-        }
-      }
-      */
-      
-      
       switch(pickupStateIndex) {
       case 0:
         leftArm.write(LEFT_ARM_DOWN);
+        leftClaw.write(LEFT_CLAW_OPEN);
         if(delayState(80))
           pickupStateIndex++;
         break;
@@ -121,67 +110,85 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
         }
         break;
       case 2:
-        if(delayState(100)) pickupStateIndex++;
+        if(delayState(250)) pickupStateIndex++;
         break;
       case 3:
         leftArm.write(LEFT_ARM_UP);
-        if(delayState(500)) {
-          rightClaw.write(LEFT_CLAW_OPEN);
+        if(delayState(400)) {
+          leftClaw.write(LEFT_CLAW_OPEN);
           pickupStateIndex++;
         }
         break;
       case 4:
-        leftClaw.write(LEFT_CLAW_OPEN);
-        leftArm.write(LEFT_ARM_START);
-        if(delayState(10)){
+        if(delayState(200)) {
+          pickupStateIndex++;
+          leftClaw.write(LEFT_CLAW_CLOSE);
+        }
+        break;
+      case 5: 
+        if(delayState(100)){
+          pickupStateIndex++;
+        }
+        break;
+      case 6:
+        leftArm.write(LEFT_ARM_WAIT);
+        if(delayState(100)){
+          leftClaw.write(LEFT_CLAW_OPEN);
           pickupStateIndex = 0;
-          atNextSquare = false;
           return;
         }
         break;
       }
     }
     else if(sequence[pathIndex] == R) {
-      //display.sendMessage(PICKUP_RIGHT);
+      display.sendMessage(PICKUP_RIGHT);
       //display.sendNum(readRightClaw());
-        //display.sendMessage(PICKUP_RIGHT);
-        static int pickupStateIndex = 0;
-        static bool clawClose = false;
-        //if(clawClose) rightClaw.write(RIGHT_CLAW_CLOSE);
-        switch(pickupStateIndex) {
+      static int pickupStateIndex = 0;
+      static bool clawClose = false;
+      switch(pickupStateIndex) {
+  
         case 0:
           rightArm.write(RIGHT_ARM_DOWN);
+          rightClaw.write(RIGHT_CLAW_OPEN);
           if(delayState(80))
-          pickupStateIndex++;
+            pickupStateIndex++;
           break;
         case 1:
-        
           if(readRightClaw() < PERSON_CLOSE_RIGHT) {
             rightClaw.write(RIGHT_CLAW_CLOSE);
             pickupStateIndex++;
           }
           break;
         case 2:
-          if(delayState(100)) pickupStateIndex++;
+          if(delayState(250)) pickupStateIndex++;
           break;
         case 3:
           rightArm.write(RIGHT_ARM_UP);
-          if(delayState(500)) {
-            //clawClose = false;
+          if(delayState(400)) {
             rightClaw.write(RIGHT_CLAW_OPEN);
             pickupStateIndex++;
           }
           break;
         case 4:
-          rightClaw.write(RIGHT_CLAW_OPEN);
-          rightArm.write(RIGHT_ARM_START);
-          if(delayState(10)){
+          if(delayState(200)) {
+            pickupStateIndex++;
+            rightClaw.write(RIGHT_CLAW_CLOSE);
+          }
+          break;
+        case 5: 
+          if(delayState(100)){
+            pickupStateIndex++;
+          }
+          break;
+        case 6:
+          rightArm.write(RIGHT_ARM_WAIT);
+          if(delayState(100)){
+            rightClaw.write(RIGHT_CLAW_OPEN);
             pickupStateIndex = 0;
-            atNextSquare = false;
             return;
           }
           break;
-        }
+      }
     }
   }
   return;
@@ -197,6 +204,7 @@ bool followRedPathState() {
 bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
   if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
+  display.sendNum(neutralIndex, 0);
   //doPickupSequence(neutralPickup, pickupIndex);
   return false;
 }
@@ -236,4 +244,3 @@ bool doneState() {
 
 
 #endif
-

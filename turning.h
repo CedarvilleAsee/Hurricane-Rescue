@@ -44,6 +44,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
          return true;
       }
    }
+   
    else {
       if (turning) {
          if (turn(HALF_SPEED, sequence[temp])) {
@@ -52,6 +53,18 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
          }
       }
       else {
+        if(sequence[temp] == F){
+          display.sendMessage(PICKUP_EMPTY);
+        }
+        else if(sequence[temp] == R){
+          display.sendMessage(PICKUP_RIGHT);
+        }
+        else if(sequence[temp] == L){
+          display.sendMessage(PICKUP_LEFT);
+        }
+        else if(sequence[temp] == B){
+          display.sendMessage(DONE);
+        }
          /*if(index + 1 < maxSteps){
          if(sequence[index + 1] == F) {
          turning = lineFollow(MAX_SPEED, 20);

@@ -35,27 +35,27 @@ const bool WHEEL_BACKWARDS  = false;
 const int DO_DUMP = 53;//53 dump
 const int DONT_DUMP = 15;//15 dont dump
 
-const int PERSON_CLOSE_RIGHT = 20;//30right
-const int PERSON_CLOSE_LEFT = 2600;//2600left
+const int PERSON_CLOSE_RIGHT = 2500;//30right
+const int PERSON_CLOSE_LEFT = 1000;//2600left
 
-const int WALL_CLOSE = 300;//300 wall
-const int AT_FORK = 2500;//1800 fork
+const int WALL_CLOSE = 250;//250 wall
+const int AT_FORK = 1000;//1000 fork
 
-const int RIGHT_ARM_UP = 157;//157 up
+const int RIGHT_ARM_UP = 159;//157 up
 const int RIGHT_ARM_START = 135;//135 start
 const int RIGHT_ARM_WAIT = 120;//120 wait
 const int RIGHT_ARM_DOWN = 77;//77 down
 
-const int LEFT_ARM_UP = 35;//35 up
+const int LEFT_ARM_UP = 33;//33 up
 const int LEFT_ARM_START = 55;//55 start
 const int LEFT_ARM_WAIT = 72;//72 wait
-const int LEFT_ARM_DOWN = 117;//117 down
+const int LEFT_ARM_DOWN = 115;//115 down
 
 const int RIGHT_CLAW_OPEN = 100;//100 open
 const int RIGHT_CLAW_CLOSE = 70;//75 close
 
-const int LEFT_CLAW_OPEN = 115;//115 open
-const int LEFT_CLAW_CLOSE = 75;//85 close
+const int LEFT_CLAW_OPEN = 85;//85 open
+const int LEFT_CLAW_CLOSE = 130;//130 close
 
 
 #endif
