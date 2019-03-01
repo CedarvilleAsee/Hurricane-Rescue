@@ -18,6 +18,7 @@ void setup() {
   oledDisplay.clearDisplay();
   oledDisplay.setTextSize(2);
   oledDisplay.setTextColor(WHITE);
+  //this is a comment
   
   display.initDisplay();
   display.sendNum(1234, 1);
