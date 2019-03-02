@@ -18,9 +18,10 @@ Servo leftClaw;
 bool turning = false;
 bool pickingUp = false;
 bool atWall = false;
-int missionNum = 1;
+bool doPickup = false;
 
 //mission globals
+int missionNum = 1;
 char redPath[40];
 char neutralPath[40];
 char redPickup[40];

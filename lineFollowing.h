@@ -68,7 +68,7 @@ bool lineFollow(int ts, int strictness) {
   static bool frontPassed = false;
   if(amountSeen >= TURN_AMOUNT){
     if(frontPassed == false) {
-      pickupIndex++;
+      //pickupIndex++;
     }
     frontPassed = true;
     writeToWheels(ts, ts);
@@ -86,6 +86,7 @@ bool lineFollow(int ts, int strictness) {
   }
   if(atIntersection() && frontPassed) {
     frontPassed = false;
+    
     return true;
   }
 

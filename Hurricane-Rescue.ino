@@ -85,7 +85,6 @@ void loop() {
       }
       break;
     case 1:
-      
       if(followRedPathState())  state++;
       break;
     case 2:
@@ -95,7 +94,7 @@ void loop() {
     //reset for second half
       pickupIndex = 0;
       atWall = false;
-      state=0;
+      state++; //change
       break;
     case 4:
       if(followNeutralPathState()) state++;

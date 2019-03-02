@@ -76,81 +76,75 @@ bool displayMissionState() {
 }
 
 
-void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of clawCLose stuff
+bool doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
-  static bool atNextSquare = true;
-  static int prevIndex = pathIndex;
-  static bool clawClose = false;
-  if(prevIndex != pathIndex) { 
-    prevIndex = pathIndex;
-    atNextSquare = true;
+  static int currentIndex = pathIndex;
+  static bool inProgress = true;
+  if(currentIndex != pathIndex){
+    currentIndex = pathIndex;
+    inProgress = true;
   }
-  if(atNextSquare){
-    if(sequence[pathIndex] == E) {
+  
+  if(inProgress){
+    if(sequence[currentIndex] == E) {
       display.sendMessage(PICKUP_EMPTY);
-      atNextSquare = false;
-      return;
+      inProgress = false;
+      return true;
     }
-    else if(sequence[pathIndex] == L) {
-      display.sendMessage(PICKUP_LEFT);
-      //display.sendNum(readLeftClaw());
+    else if(sequence[currentIndex] == L) {
       static int pickupStateIndex = 0;
-      static bool clawClose = false;
+      display.sendMessage(PICKUP_LEFT);
+      //return true;
       switch(pickupStateIndex) {
-      case 0:
-        leftArm.write(LEFT_ARM_DOWN);
-        leftClaw.write(LEFT_CLAW_OPEN);
-        if(delayState(80))
-          pickupStateIndex++;
-        break;
-      case 1:
-        if(readLeftClaw() < PERSON_CLOSE_LEFT) {
-          leftClaw.write(LEFT_CLAW_CLOSE);
-          pickupStateIndex++;
-        }
-        break;
-      case 2:
-        if(delayState(250)) pickupStateIndex++;
-        break;
-      case 3:
-        leftArm.write(LEFT_ARM_UP);
-        if(delayState(400)) {
+        case 0:
+          leftArm.write(LEFT_ARM_DOWN);
           leftClaw.write(LEFT_CLAW_OPEN);
-          pickupStateIndex++;
-        }
-        break;
-      case 4:
-        if(delayState(200)) {
-          pickupStateIndex++;
+          if(delayState(20))
+            pickupStateIndex++;
+          break;
+        case 1:
+          if(readLeftClaw() < PERSON_CLOSE_LEFT) {
+            leftClaw.write(LEFT_CLAW_CLOSE);
+            pickupStateIndex++;
+          }
+          break;
+        case 2:
+          if(delayState(350)) pickupStateIndex++;
+          break;
+        case 3:
+          leftArm.write(LEFT_ARM_UP);
+          if(delayState(300)) {
+            leftClaw.write(LEFT_CLAW_OPEN);
+            pickupStateIndex++;
+          }
+          break;
+        case 4:
+          if(delayState(200)) {
+            pickupStateIndex++;
+            leftClaw.write(LEFT_CLAW_CLOSE);
+            leftArm.write(LEFT_ARM_WAIT);
+          }
+          break;
+        case 5:
+          leftArm.write(LEFT_ARM_WAIT);
           leftClaw.write(LEFT_CLAW_CLOSE);
-        }
-        break;
-      case 5: 
-        if(delayState(100)){
-          pickupStateIndex++;
-        }
-        break;
-      case 6:
-        leftArm.write(LEFT_ARM_WAIT);
-        if(delayState(100)){
-          leftClaw.write(LEFT_CLAW_OPEN);
-          pickupStateIndex = 0;
-          return;
-        }
-        break;
+          if(delayState(50)){
+            pickupStateIndex = 0;
+            inProgress = false;
+            return true;
+          }
+          break;
       }
     }
-    else if(sequence[pathIndex] == R) {
-      display.sendMessage(PICKUP_RIGHT);
-      //display.sendNum(readRightClaw());
+    else if(sequence[currentIndex] == R) {
       static int pickupStateIndex = 0;
-      static bool clawClose = false;
+      display.sendMessage(PICKUP_RIGHT);
+      //return true;
       switch(pickupStateIndex) {
-  
         case 0:
           rightArm.write(RIGHT_ARM_DOWN);
           rightClaw.write(RIGHT_CLAW_OPEN);
-          if(delayState(80))
+          if(delayState(20))
             pickupStateIndex++;
           break;
         case 1:
@@ -160,11 +154,11 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
           }
           break;
         case 2:
-          if(delayState(250)) pickupStateIndex++;
+          if(delayState(350)) pickupStateIndex++;
           break;
         case 3:
           rightArm.write(RIGHT_ARM_UP);
-          if(delayState(400)) {
+          if(delayState(300)) {
             rightClaw.write(RIGHT_CLAW_OPEN);
             pickupStateIndex++;
           }
@@ -173,30 +167,32 @@ void doPickupSequence(const char sequence[], int pathIndex) {//try to get rid of
           if(delayState(200)) {
             pickupStateIndex++;
             rightClaw.write(RIGHT_CLAW_CLOSE);
+            rightArm.write(RIGHT_ARM_WAIT);
           }
           break;
-        case 5: 
-          if(delayState(100)){
-            pickupStateIndex++;
-          }
-          break;
-        case 6:
+        case 5:
           rightArm.write(RIGHT_ARM_WAIT);
-          if(delayState(100)){
-            rightClaw.write(RIGHT_CLAW_OPEN);
+          rightClaw.write(RIGHT_CLAW_CLOSE);
+          if(delayState(50)){
             pickupStateIndex = 0;
-            return;
+            inProgress = false;
+            return true;
           }
           break;
       }
     }
   }
-  return;
+  return false;
 }
 
 bool followRedPathState() {
   if(redIndex == redSteps) return true;
   if(doTurnSequence(redPath, redIndex, redSteps)) redIndex++;
+  if(pickupIndex != redIndex){
+    if(delayState(300)){
+      pickupIndex = redIndex;
+    }
+  }
   doPickupSequence(redPickup, pickupIndex);
   return false;
 }
@@ -204,8 +200,12 @@ bool followRedPathState() {
 bool followNeutralPathState() {
   if(neutralIndex == neutralSteps) return true;
   if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) neutralIndex++;
-  display.sendNum(neutralIndex, 0);
-  //doPickupSequence(neutralPickup, pickupIndex);
+  if(pickupIndex != neutralIndex){
+    if(delayState(300)){
+      pickupIndex = neutralIndex;
+    }
+  }
+  doPickupSequence(neutralPickup, pickupIndex);
   return false;
 }
 
@@ -222,7 +222,7 @@ bool depositPeopleState(){
       break;
     case 1:
       dump.write(DO_DUMP);
-      if(delayState(1500)) depositIndex++;
+      if(delayState(1000)) depositIndex++;
       break;
     case 2:
       dump.write(DONT_DUMP);

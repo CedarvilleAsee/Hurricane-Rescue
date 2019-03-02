@@ -38,6 +38,7 @@ bool turn(int spd, char dir) {
 }
 
 bool doTurnSequence(const char sequence[], int index, int maxSteps) {
+  
    int temp = index + 1; // should be acting on next instruction, not current
    if (temp == maxSteps) {
       if (lineFollow(FULL_SPEED, 20)) {
@@ -53,24 +54,6 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
          }
       }
       else {
-        if(sequence[temp] == F){
-          display.sendMessage(PICKUP_EMPTY);
-        }
-        else if(sequence[temp] == R){
-          display.sendMessage(PICKUP_RIGHT);
-        }
-        else if(sequence[temp] == L){
-          display.sendMessage(PICKUP_LEFT);
-        }
-        else if(sequence[temp] == B){
-          display.sendMessage(DONE);
-        }
-         /*if(index + 1 < maxSteps){
-         if(sequence[index + 1] == F) {
-         turning = lineFollow(MAX_SPEED, 20);
-         return false;
-         }
-         } //not tested yet*/
          turning = lineFollow(FULL_SPEED, 20);
       }
    }
