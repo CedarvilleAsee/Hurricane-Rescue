@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
+int FULL_SPEED = 100;//100
 #include "pins.h"
 #include "constants.h"
 #include "missions.h"

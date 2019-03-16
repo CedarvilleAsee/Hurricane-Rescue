@@ -19,18 +19,17 @@ const int NEUTRAL_STEPS_1 = 18;
 ///////////////////////////////
 
 
-const char RED_MISSION_2[] = { F, F, F, F, R, R, F, R, F, L };
+const char RED_MISSION_2[] = { F, F, F, F, F, F, F, R, B, F, L, F, F, F, F, F };
 
-const char RED_PICKUP_2[] = { E, E, E, L, L, E, L, E, E, E };
+const char RED_PICKUP_2[] = { E, E, E, E, E, E, L, L, E, E, E, E, E, R, E, E };
 
-const int RED_STEPS_2 = 10;
+const int RED_STEPS_2 = 16;
 
-const char NEUTRAL_MISSION_2[] = { F, F, F, F, F, F, R, R, F, F, F, F, F, L };
+const char NEUTRAL_MISSION_2[] = { F, F, F, F, F, F, R, F, R, F, F, R, L, F, F, L };
 
-const char NEUTRAL_PICKUP_2[] = { E, E, E, R, L, L, R, E, E, E, E, E, E, E };
+const char NEUTRAL_PICKUP_2[] = { E, R, E, R, E, L, E, E, E, E, L, E, E, E, E, E };
 
-const int NEUTRAL_STEPS_2 = 14;
-
+const int NEUTRAL_STEPS_2 = 16;
 
 
 

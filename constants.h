@@ -4,13 +4,13 @@
 
 //speed constants
 const int HALF_SPEED = 50;
-const int FULL_SPEED = 100;
+//int FULL_SPEED = 100;//100
 const int MAX_SPEED = 80;
 const int LINE_STRICTNESS = 20;
 
 //Joel constants
 const int TARGET_INDEX = 4;
-const int TURN_AMOUNT  = 3;
+const int TURN_AMOUNT  = 4;
 
 //message constants
 const int PICKUP_EMPTY = 0;
@@ -36,7 +36,7 @@ const int DO_DUMP = 53;//53 dump
 const int DONT_DUMP = 15;//15 dont dump
 
 const int PERSON_CLOSE_RIGHT = 2900;//2900right
-const int PERSON_CLOSE_LEFT = 2500;//2400left
+const int PERSON_CLOSE_LEFT = 2700;//2400left
 
 const int WALL_CLOSE = 2000;//2000 wall
 const int AT_FORK = 3600;//3600 fork
