@@ -5,7 +5,11 @@ bool turn(int spd, char dir) {
    static int lineCount = 0;
    static bool gotOffLine = false;
    
-   if (dir == F) return true;
+   if (dir == F) {
+    if(delayState(500)){
+      return true;
+    }
+   }
    if (dir == L) {
       writeToWheels(-spd, spd);
    }
