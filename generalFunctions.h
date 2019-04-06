@@ -1,16 +1,13 @@
 int readFrontSensor() {
    return analogRead(FRONT_SENSOR);
 }
-int readForkSensor() {
-   return analogRead(FORK_SENSOR);
+bool atIntersection() {
+   return digitalRead(FORK_SENSOR) == HIGH;
+   //return analogRead(FORK_SENSOR);
 }
 
 bool isAtWall() {
   return readFrontSensor() < WALL_CLOSE;
-}
-
-bool atIntersection() {
-  return readForkSensor() > AT_FORK;
 }
 
 int readRightClaw() {
@@ -33,6 +30,3 @@ bool delayState(int ms) {
   }
   return false;
 }
-
-
-

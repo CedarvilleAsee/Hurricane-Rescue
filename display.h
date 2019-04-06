@@ -44,11 +44,9 @@ void printDebugging() {
   oledDisplay.print("LClaw:");
   oledDisplay.println(readLeftClaw());
   oledDisplay.print("Fork :");
-  oledDisplay.println(readForkSensor());
+  oledDisplay.println((atIntersection()) ? "ON" : "OFF");
+  //oledDisplay.println(atIntersection());
   oledDisplay.print("Front:");
   oledDisplay.println(readFrontSensor());
   oledDisplay.display();
 }
-
-
-

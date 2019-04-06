@@ -3,7 +3,7 @@
 #define CONSTANTS
 
 //speed constants
-const int HALF_SPEED = 50;
+const int HALF_SPEED = 80;
 //int FULL_SPEED = 100;//100
 const int MAX_SPEED = 80;
 const int LINE_STRICTNESS = 20;
@@ -35,10 +35,10 @@ const bool WHEEL_BACKWARDS  = false;
 const int DO_DUMP = 53;//53 dump
 const int DONT_DUMP = 15;//15 dont dump
 
-const int PERSON_CLOSE_RIGHT = 2900;//2900right
-const int PERSON_CLOSE_LEFT = 2700;//2400left
+const int PERSON_CLOSE_RIGHT = 2200;//2600right
+const int PERSON_CLOSE_LEFT = 2200;//2200left
 
-const int WALL_CLOSE = 2000;//2000 wall
+const int WALL_CLOSE = 1000;//2000 wall
 const int AT_FORK = 3600;//3600 fork
 
 const int RIGHT_ARM_UP = 159;//157 up
@@ -51,7 +51,7 @@ const int LEFT_ARM_START = 55;//55 start
 const int LEFT_ARM_WAIT = 72;//72 wait
 const int LEFT_ARM_DOWN = 115;//115 down
 
-const int RIGHT_CLAW_OPEN = 100;//100 open
+const int RIGHT_CLAW_OPEN = 110;//100 open
 const int RIGHT_CLAW_CLOSE = 70;//70 close
 
 const int LEFT_CLAW_OPEN = 85;//85 open

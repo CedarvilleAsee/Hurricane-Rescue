@@ -77,10 +77,6 @@ void loop() {
       if(pickMissionState()) state++;//press button2 to switch mission, button 1 to select
       break;
     case -1:
-      leftArm.write(LEFT_ARM_START);
-      delay(3000);
-      leftArm.write(LEFT_ARM_DOWN);
-      delay(3000);
       if(displayMissionState()) state++; // button 2 to advance
       break;
     case 0:
