@@ -29,7 +29,6 @@ char neutralPickup[40];
 int neutralSteps;
 int redSteps;
 
-
 int sensorCounter = 0;
 
 int pickupIndex = 0;
@@ -38,6 +37,6 @@ int neutralIndex = 0;
 int racquetballIndex =0;
 PT6961 display(DIN, CLOCK, CS);
 
-
+int mil = 0;
 
 #endif

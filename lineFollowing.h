@@ -67,9 +67,6 @@ bool lineFollow(int ts, int strictness) {
 
   static bool frontPassed = false;
   if(amountSeen >= TURN_AMOUNT){
-    if(frontPassed == false) {
-      //pickupIndex++;
-    }
     frontPassed = true;
     writeToWheels(ts, ts);
   }
@@ -82,11 +79,11 @@ bool lineFollow(int ts, int strictness) {
   // Return true if the sensors can see a fork
   if(readFrontSensor() < WALL_CLOSE) {
     atWall = true;
+    frontPassed = false;
     return true;
   }
-  if(atIntersection() && frontPassed) {
+  if(atIntersection() && frontPassed && (millis() > 200 + mil)) {
     frontPassed = false;
-    
     return true;
   }
 

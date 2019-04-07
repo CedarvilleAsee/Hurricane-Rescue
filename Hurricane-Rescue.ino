@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <Servo.h>
-int FULL_SPEED = 100;//100
 #include "pins.h"
 #include "constants.h"
 #include "missions.h"
@@ -82,8 +81,6 @@ void loop() {
     case 0:
       if(waitState()) {
         state++; // button 1 to start
-        rightArm.write(RIGHT_ARM_WAIT);
-        leftArm.write(LEFT_ARM_WAIT);
       }
       break;
     case 1:
