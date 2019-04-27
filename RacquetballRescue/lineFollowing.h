@@ -5,12 +5,12 @@
 void readLine() {
   amountSeen = 0;
   lastLineIndex = -1;
-  for(int i = 7; i >= 0; --i) {
+  for (int i = 7; i >= 0; --i) {
 
     sensors[i] = digitalRead(LINE_SENSOR[i]);
 
-    if(sensors[i] == HIGH) {
-      if(lastLineIndex == -1) {
+    if (sensors[i] == HIGH) {
+      if (lastLineIndex == -1) {
         lastLineIndex = i;
       }
       ++amountSeen;
@@ -19,10 +19,11 @@ void readLine() {
   }
 
   sensorCounter = 0;
-  for (int i = 0; i < 8; i++ ){
-    sensorCounter += sensors[i]<<i;
+  for (int i = 0; i < 8; i++ ) {
+    sensorCounter += sensors[i] << i;
   }
-    //display.sendNum(sensorCounter);
+  //display.sendNum(racquetballIndex, 0);
+
 }
 
 bool sensorsCentered() {
@@ -41,7 +42,7 @@ void writeWheelDirection(bool ldir, bool rdir) {
 }
 
 void writeToWheels(int ls, int rs) {
-  if(ls < 0) {
+  if (ls < 0) {
     digitalWrite(WHEEL_DIR_LF, false); //right backwards
     digitalWrite(WHEEL_DIR_LB, true);
   }
@@ -49,7 +50,7 @@ void writeToWheels(int ls, int rs) {
     digitalWrite(WHEEL_DIR_LF, true); //right forwards
     digitalWrite(WHEEL_DIR_LB, false);
   }
-  if(rs < 0) {
+  if (rs < 0) {
     digitalWrite(WHEEL_DIR_RF, false); //right backwards
     digitalWrite(WHEEL_DIR_RB, true);
   }
@@ -65,24 +66,24 @@ void writeToWheels(int ls, int rs) {
 bool lineFollow(int ts, int strictness) {
 
   static bool frontPassed = false;
-  if(amountSeen >= TURN_AMOUNT){
+  if (amountSeen >= TURN_AMOUNT) {
     frontPassed = true;
     writeToWheels(ts, ts);
   }
   else {
-    int rightSpeed = ts + (lastLineIndex - 4)*strictness;
-    int leftSpeed = ts - (firstLineIndex - 3)*strictness;
+    int rightSpeed = ts + (lastLineIndex - 4) * strictness;
+    int leftSpeed = ts - (firstLineIndex - 3) * strictness;
     writeToWheels(leftSpeed, rightSpeed);
   }
 
   // Return true if the sensors can see a fork
-  if(readFrontSensor() < WALL_CLOSE) {
+  if (readFrontSensor() < WALL_CLOSE) {
     atWall = true;
     frontPassed = false;
     return true;
   }
-  
-  if(atIntersection() && frontPassed && (millis() > 1000 + mil)) {
+
+  if (atIntersection() && frontPassed && (millis() > 500 + mil)) {
     frontPassed = false;
     return true;
   }

@@ -60,6 +60,7 @@ bool waitStateReturn() {
       return true;
     }
   }
+  ranOutOfTime = true;
   return true;
 
   //if timer runs down
@@ -67,22 +68,29 @@ bool waitStateReturn() {
 
 
 bool moveToFire() {
-  if (racquetballIndex == RACQUET_BALL_STEPS) return true; 
-  if(racquetballIndex <= 5 && racquetballIndex >= 1 && robotObstruct() && currentPath[8] != F){
-      //change all to F
-      for(int i = 0 ; i < RACQUET_BALL_STEPS ; i ++){
-       currentPath[i] = F;
-      }
-      //insert the L and R
-      currentPath[racquetballIndex + 1] = L;
-      currentPath[racquetballIndex + 2] = R;
-      
-  }
+  static bool hasModdedPath = false;
+  if (racquetballIndex == RACQUET_BALL_STEPS) return true;
   if (doTurnSequence(currentPath, racquetballIndex, RACQUET_BALL_STEPS)) {
     mil = millis();
+
     racquetballIndex++;
+    int temp = racquetballIndex + 1;
+    if (ranOutOfTime && !hasModdedPath && temp <= 6 && temp >= 2 && robotObstruct()) { //seems to drive drunkenly
+      currentPath[7] = F;
+      currentPath[8] = F;
+      currentPath[temp] = L;
+      currentPath[temp + 1] = R;
+      displayText("Obstacle");
+      hasModdedPath = true;
+    }
+
   }
-  display.sendNum(racquetballIndex, 0);
+  if (atIntersection()) {
+    display.sendNum(racquetballIndex + 100, 0);
+  }
+  else {
+    display.sendNum(racquetballIndex, 0);
+  }
   return false;
 }
 
@@ -97,7 +105,7 @@ bool putOutFire() { //change so moves further at end to reach fire
   delay(1500);
   for (int i = DO_DUMP; i < DONT_DUMP; i++) {
     dump.write(i);
-    delay(10);
+    delay(5);
   }
   return true;
 }

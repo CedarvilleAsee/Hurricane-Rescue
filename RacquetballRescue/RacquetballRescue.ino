@@ -85,9 +85,9 @@ void loop() {
       delay(1000);
       writeToWheels(0, 0);
       state++;
+      displayText("Wait for  robot to  return");
       break;
     case 3:
-      displayText("Wait for  robot to  return");
       if (waitStateReturn())  state++; //wait for first robot to come back
       break;
     case 4:
@@ -97,6 +97,7 @@ void loop() {
       if (putOutFire()) state++; 
       break;
     default:
+      displayText("DONE! :)");
       if (doneState()) state = -1;
       break;
   }

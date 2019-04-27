@@ -19,6 +19,7 @@ bool turning = false;
 bool pickingUp = false;
 bool atWall = false;
 int  missionNum = 1;
+bool ranOutOfTime = false;
 
 //mission globals
 char redPath[40];
