@@ -39,14 +39,22 @@ bool turn(int spd, char dir) {
 }
 
 bool doTurnSequence(char sequence[], int index, int maxSteps) { //need to be able to change
+   static bool hasModdedPath = false;
    int temp = index + 1; // should be acting on next instruction, not current
 //check for obstruction here, before decides, if between index 1 and 5 (temp: 2 and 6)
-  /* if(temp <= 6 && temp >= 2 && robotObstruct()){ //seems to drive drunkenly
+  /* if(!hasModdedPath && temp <= 6 && temp >= 2 && robotObstruct()){ //seems to drive drunkenly
       //switch to the correct array, will be temp -2
       int altInd = temp - 2;
-      for(int i = 0 ; i < RACQUET_BALL_STEPS ; i ++){
+      for(int i = 0 ; i < RACQUET_BALL_STEPS ; i++){
         sequence[i] = RACQUET_BALL_ALTS[altInd][i];
       }
+
+
+      sequence[7] = F; //Ian's changes, not tested
+      sequence[8] = F;
+      sequence[temp] = L;
+      sequence[temp + 1] = R;
+      hasModdedPath = true;
    }*/
   
    if (temp == maxSteps) {
@@ -67,6 +75,5 @@ bool doTurnSequence(char sequence[], int index, int maxSteps) { //need to be abl
    }
    return false;
 }
-
 
 #endif

@@ -92,6 +92,11 @@ bool putOutFire() { //change so moves further at end to reach fire
   display.sendMessage(DEPOSITING);
   for (int i = DONT_DUMP; i > DO_DUMP; i--) {
     dump.write(i);
+    delay(15);
+  }
+  delay(1500);
+  for (int i = DO_DUMP; i < DONT_DUMP; i++) {
+    dump.write(i);
     delay(10);
   }
   return true;

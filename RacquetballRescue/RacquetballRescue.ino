@@ -12,9 +12,6 @@
 #include "turning.h"
 #include "subStates.h"
 
-
-
-//Don't need setup for the nextgen
 void setup() {
   oledDisplay.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   oledDisplay.display();
@@ -24,9 +21,6 @@ void setup() {
 
   display.initDisplay();
   display.sendNum(1234, 1);
-
-
-
 
   // initialize line sensors
   for (int i = 0; i < 8; i++) {
