@@ -29,7 +29,7 @@ const char E = '0';
 const bool WHEEL_FORWARDS   = true;
 const bool WHEEL_BACKWARDS  = false;
 
-const int DO_DUMP = 75;//ok
+const int DO_DUMP = 70;//ok
 const int DONT_DUMP = 150;//ok
 
 const int WALL_CLOSE = 2800;

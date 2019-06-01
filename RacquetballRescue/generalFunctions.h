@@ -17,7 +17,8 @@ bool isAtWall() {
 }
 
 bool robotClose() {
-  return readLaser() < ROBOT_CLOSE;
+  int reading = readLaser();
+  return (reading < ROBOT_CLOSE && reading > 50);
 }
 
 bool robotObstruct(){ //for when the 1st robot gets stuck at next intersection

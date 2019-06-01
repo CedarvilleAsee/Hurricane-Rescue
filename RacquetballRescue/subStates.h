@@ -102,7 +102,7 @@ bool putOutFire() { //change so moves further at end to reach fire
     dump.write(i);
     delay(15);
   }
-  delay(1500);
+  delay(2500);
   for (int i = DO_DUMP; i < DONT_DUMP; i++) {
     dump.write(i);
     delay(5);
