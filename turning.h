@@ -39,11 +39,16 @@ bool turn(int spd, char dir) {
 
 }
 
-bool doTurnSequence(const char sequence[], int index, int maxSteps) {
-
+bool doTurnSequence(const char sequence[], int index, int maxSteps, bool redFast = false) {
+  int speedVal = FULL_SPEED;
+  int turnStrictness = LINE_STRICTNESS;
+  if(redFast){
+    speedVal = RED_FAST_SPEED;
+    turnStrictness = RED_FAST_STRICTNESS;
+  }
   int temp = index + 1; // should be acting on next instruction, not current
   if (temp == maxSteps) {
-    if (lineFollow(FULL_SPEED, 20)) {
+    if (lineFollow(speedVal, turnStrictness)) {
       return true;
     }
   }
@@ -56,7 +61,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps) {
       }
     }
     else {
-      turning = lineFollow(FULL_SPEED, 20);
+      turning = lineFollow(speedVal, turnStrictness);
     }
   }
   return false;

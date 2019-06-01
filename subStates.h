@@ -198,8 +198,12 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
 }
 
 bool followRedPathState() {
+  bool goFast = false;
   if(redIndex == redSteps) return true;
-  if(doTurnSequence(redPath, redIndex, redSteps)) {
+  if(redPickup[redIndex] == E) {
+    goFast = true;
+  }
+  if(doTurnSequence(redPath, redIndex, redSteps, goFast)) {
     mil = millis();
     redIndex++;
   }
@@ -214,12 +218,16 @@ bool followRedPathState() {
 }
 
 bool followNeutralPathState() {
+  bool goFast = false;
   if(neutralIndex == neutralSteps) return true;
   if(neutralIndex == neutralSteps - 2){
     leftArm.write(LEFT_ARM_START);
     rightArm.write(RIGHT_ARM_START);
   }
-  if(doTurnSequence(neutralPath, neutralIndex, neutralSteps)) {
+  if(neutralPickup[neutralIndex] == E) {
+    goFast = true;
+  }
+  if(doTurnSequence(neutralPath, neutralIndex, neutralSteps, goFast)) {
     mil = millis();
     neutralIndex++;
   }

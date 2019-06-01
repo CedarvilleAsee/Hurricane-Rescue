@@ -29,6 +29,9 @@ char neutralPickup[40];
 int neutralSteps;
 int redSteps;
 
+int redSpeed;
+int redStrictness;
+
 int sensorCounter = 0;
 
 int pickupIndex = 0;

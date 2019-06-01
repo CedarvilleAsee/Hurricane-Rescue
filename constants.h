@@ -8,6 +8,9 @@ const int FULL_SPEED = 100;//100
 const int MAX_SPEED = 80;
 const int LINE_STRICTNESS = 20;
 
+const int RED_FAST_SPEED = 150;
+const int RED_FAST_STRICTNESS = 20;
+
 //Joel constants
 const int TARGET_INDEX = 4;
 const int TURN_AMOUNT  = 4;
