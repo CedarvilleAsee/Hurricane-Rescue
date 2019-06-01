@@ -3,13 +3,15 @@
 #define CONSTANTS
 
 //speed constants
-const int HALF_SPEED = 80;
-const int FULL_SPEED = 100;//100
+const int TURN_SPEED = 65;
+const int FULL_SPEED = 100;
 const int MAX_SPEED = 80;
 const int LINE_STRICTNESS = 20;
 
 const int RED_FAST_SPEED = 150;
 const int RED_FAST_STRICTNESS = 20;
+const int RED_REALLY_FAST_SPEED = 200;
+const int RED_REALLY_FAST_STRICTNESS = 20;
 
 //Joel constants
 const int TARGET_INDEX = 4;
@@ -35,11 +37,11 @@ const char E = '0';
 const bool WHEEL_FORWARDS   = true;
 const bool WHEEL_BACKWARDS  = false;
 
-const int DO_DUMP = 53;//53 dump
-const int DONT_DUMP = 8;//15 dont dump
+const int DO_DUMP = 53;
+const int DONT_DUMP = 8;
 
-const int PERSON_CLOSE_RIGHT = 2000;//2600right
-const int PERSON_CLOSE_LEFT = 1600;//2200left
+const int PERSON_CLOSE_RIGHT = 1600;//2000right old
+const int PERSON_CLOSE_LEFT = 600;//1600left old
 
 const int WALL_CLOSE = 1000;//2000 wall
 const int AT_FORK = 3600;//3600 fork
@@ -50,7 +52,7 @@ const int RIGHT_ARM_WAIT = 120;//120 wait
 const int RIGHT_ARM_DOWN = 77;//77 down
 
 const int LEFT_ARM_UP = 33;//33 up
-const int LEFT_ARM_START = 48;//55 start
+const int LEFT_ARM_START = 48;//48 start
 const int LEFT_ARM_WAIT = 72;//72 wait
 const int LEFT_ARM_DOWN = 115;//115 down
 

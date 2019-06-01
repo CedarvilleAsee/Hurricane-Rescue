@@ -65,6 +65,12 @@ void setup() {
 
   redSpeed = FULL_SPEED;
   redStrictness = 20;
+  /*for(int i = 0; i < 10; i++){
+    dump.write(DONT_DUMP);
+    delay(2000);
+    dump.write(DO_DUMP);
+    delay(2000);
+  }*/
   
   afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //makes PB3 work
 }

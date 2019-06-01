@@ -39,12 +39,16 @@ bool turn(int spd, char dir) {
 
 }
 
-bool doTurnSequence(const char sequence[], int index, int maxSteps, bool redFast = false) {
+bool doTurnSequence(const char sequence[], int index, int maxSteps, int redFast = 0) {
   int speedVal = FULL_SPEED;
   int turnStrictness = LINE_STRICTNESS;
-  if(redFast){
+  if(redFast == 1){
     speedVal = RED_FAST_SPEED;
     turnStrictness = RED_FAST_STRICTNESS;
+  }
+  else if (redFast == 2){
+    speedVal = RED_REALLY_FAST_SPEED;
+    turnStrictness = RED_REALLY_FAST_STRICTNESS;
   }
   int temp = index + 1; // should be acting on next instruction, not current
   if (temp == maxSteps) {
@@ -55,7 +59,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps, bool redFast
 
   else {
     if (turning) {
-      if (turn(HALF_SPEED, sequence[temp])) {
+      if (turn(TURN_SPEED, sequence[temp])) {
         turning = false;
         return true;
       }

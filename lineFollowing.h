@@ -84,6 +84,7 @@ bool lineFollow(int ts, int strictness) {
   }
   if(atIntersection() && frontPassed && (millis() > 200 + mil)) {
     frontPassed = false;
+    atNextLine = true;
     return true;
   }
 

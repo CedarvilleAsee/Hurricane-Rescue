@@ -10,9 +10,9 @@ bool waitState() {
   //keeps the robot still
   writeToWheels(0, 0);
   //when started, copy missions into globals
-  if(digitalRead(BUTTON_1) == LOW) {
+  if (digitalRead(BUTTON_1) == LOW) {
     //get mission number from switches
-    if(missionNum == 1) {
+    if (missionNum == 1) {
       strncpy(redPath, RED_MISSION_1, RED_STEPS_1);
       strncpy(neutralPath, NEUTRAL_MISSION_1, NEUTRAL_STEPS_1);
       strncpy(redPickup, RED_PICKUP_1, RED_STEPS_1);
@@ -20,7 +20,7 @@ bool waitState() {
       redSteps = RED_STEPS_1;
       neutralSteps = NEUTRAL_STEPS_1;
     }
-    else if(missionNum == 2) {
+    else if (missionNum == 2) {
       strncpy(redPath, RED_MISSION_2, RED_STEPS_2);
       strncpy(neutralPath, NEUTRAL_MISSION_2, NEUTRAL_STEPS_2);
       strncpy(redPickup, RED_PICKUP_2, RED_STEPS_2);
@@ -28,7 +28,7 @@ bool waitState() {
       redSteps = RED_STEPS_2;
       neutralSteps = NEUTRAL_STEPS_2;
     }
-    else if(missionNum == 3) {
+    else if (missionNum == 3) {
       strncpy(redPath, RED_MISSION_3, RED_STEPS_3);
       strncpy(neutralPath, NEUTRAL_MISSION_3, NEUTRAL_STEPS_3);
       strncpy(redPickup, RED_PICKUP_3, RED_STEPS_3);
@@ -36,7 +36,7 @@ bool waitState() {
       redSteps = RED_STEPS_3;
       neutralSteps = NEUTRAL_STEPS_3;
     }
-    else if(missionNum == 4) {
+    else if (missionNum == 4) {
       strncpy(redPath, RED_MISSION_4, RED_STEPS_4);
       strncpy(neutralPath, NEUTRAL_MISSION_4, NEUTRAL_STEPS_4);
       strncpy(redPickup, RED_PICKUP_4, RED_STEPS_4);
@@ -51,7 +51,7 @@ bool waitState() {
 
 bool pickMissionState() {
   displayMission(missionNum);
-  if (digitalRead(BUTTON_2) == LOW){
+  if (digitalRead(BUTTON_2) == LOW) {
     missionNum++;
     if (missionNum == 5) {
       missionNum = 1;
@@ -59,7 +59,7 @@ bool pickMissionState() {
     while (digitalRead(BUTTON_2) == LOW);
   }
   if (digitalRead(BUTTON_1) == LOW) {
-    while(digitalRead(BUTTON_1) == LOW);
+    while (digitalRead(BUTTON_1) == LOW);
     return true;
   }
   displayMission(missionNum);
@@ -67,8 +67,8 @@ bool pickMissionState() {
 }
 
 bool displayMissionState() {
-  if(digitalRead(BUTTON_2) == LOW){
-    while(digitalRead(BUTTON_2) == LOW);
+  if (digitalRead(BUTTON_2) == LOW) {
+    while (digitalRead(BUTTON_2) == LOW);
     return true;
   }
   displayMissionConfirmation(missionNum);
@@ -80,61 +80,67 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
   static int pickupStateIndex = 0;
   static int currentIndex = pathIndex;
   static bool inProgress = true;
-  if(!inProgress && currentIndex != pathIndex){
+  
+  if (!inProgress && currentIndex != pathIndex) {
     currentIndex = pathIndex;
+    atNextLine = false;
     inProgress = true;
   }
-  
-  if(inProgress){
-    if(sequence[currentIndex] == E) {
+
+  if (inProgress) {
+    if (sequence[currentIndex] == E) {
       //display.sendMessage(PICKUP_EMPTY);
       inProgress = false;
       return true;
     }
-    else if(sequence[currentIndex] == L) {
+    else if (sequence[currentIndex] == L) {
       static int pickupStateIndex = -1;
       //display.sendMessage(PICKUP_LEFT);
-      switch(pickupStateIndex) {
+      switch (pickupStateIndex) {
         case -1:
           rightArm.write(RIGHT_ARM_WAIT);
-          if(delayState(20)){
+          if (delayState(20)) {
             pickupStateIndex++;
           }
           break;
         case 0:
-          //FULL_SPEED = 50;
           leftArm.write(LEFT_ARM_DOWN);
           leftClaw.write(LEFT_CLAW_OPEN);
-          if(delayState(20))
+          if (delayState(20))
             pickupStateIndex++;
           break;
         case 1:
-          if(readLeftClaw() < PERSON_CLOSE_LEFT) {
+          if (readLeftClaw() < PERSON_CLOSE_LEFT) {
             leftClaw.write(LEFT_CLAW_CLOSE);
             pickupStateIndex++;
           }
+          if (atNextLine) {
+            pickupStateIndex = -1;
+            inProgress = false;
+            leftClaw.write(LEFT_CLAW_CLOSE);
+            leftArm.write(LEFT_ARM_WAIT);
+            return true;
+          }
           break;
         case 2:
-          if(delayState(250)) pickupStateIndex++;
+          if (delayState(250)) pickupStateIndex++;
           break;
         case 3:
           leftArm.write(LEFT_ARM_UP);
-          if(delayState(250)) {
+          if (delayState(250)) {
             leftClaw.write(LEFT_CLAW_OPEN);
             pickupStateIndex++;
           }
           break;
         case 4:
-          if(delayState(100)) {
+          if (delayState(100)) {
             leftClaw.write(LEFT_CLAW_CLOSE);
-            //leftArm.write(LEFT_ARM_WAIT);
             pickupStateIndex++;
           }
           break;
         case 5:
-          //leftArm.write(LEFT_ARM_WAIT);
           leftClaw.write(LEFT_CLAW_CLOSE);
-          if(delayState(50)){
+          if (delayState(50)) {
             pickupStateIndex = -1;
             inProgress = false;
             return true;
@@ -142,50 +148,53 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
           break;
       }
     }
-    else if(sequence[currentIndex] == R) {
+    else if (sequence[currentIndex] == R) {
       static int pickupStateIndex = -1;
-      //display.sendMessage(PICKUP_RIGHT);
-      //return true;
-      switch(pickupStateIndex) {
+      switch (pickupStateIndex) {
         case -1:
           leftArm.write(LEFT_ARM_WAIT);
-          if(delayState(20)){
+          if (delayState(20)) {
             pickupStateIndex++;
           }
           break;
         case 0:
           rightArm.write(RIGHT_ARM_DOWN);
           rightClaw.write(RIGHT_CLAW_OPEN);
-          if(delayState(20))
+          if (delayState(20))
             pickupStateIndex++;
           break;
         case 1:
-          if(readRightClaw() < PERSON_CLOSE_RIGHT) {
+          if (readRightClaw() < PERSON_CLOSE_RIGHT) {
             rightClaw.write(RIGHT_CLAW_CLOSE);
             pickupStateIndex++;
           }
+          if (atNextLine) {
+            pickupStateIndex = -1;
+            inProgress = false;
+            rightClaw.write(RIGHT_CLAW_CLOSE);
+            rightArm.write(RIGHT_ARM_WAIT);
+            return true;
+          }
           break;
         case 2:
-          if(delayState(250)) pickupStateIndex++;
+          if (delayState(250)) pickupStateIndex++;
           break;
         case 3:
           rightArm.write(RIGHT_ARM_UP);
-          if(delayState(250)) {
+          if (delayState(250)) {
             rightClaw.write(RIGHT_CLAW_OPEN);
             pickupStateIndex++;
           }
           break;
         case 4:
-          if(delayState(100)) {
+          if (delayState(100)) {
             pickupStateIndex++;
             rightClaw.write(RIGHT_CLAW_CLOSE);
-            //rightArm.write(RIGHT_ARM_WAIT);
           }
           break;
         case 5:
-          //rightArm.write(RIGHT_ARM_WAIT);
           rightClaw.write(RIGHT_CLAW_CLOSE);
-          if(delayState(50)){
+          if (delayState(50)) {
             pickupStateIndex = -1;
             inProgress = false;
             return true;
@@ -198,42 +207,49 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
 }
 
 bool followRedPathState() {
-  bool goFast = false;
-  if(redIndex == redSteps) return true;
-  if(redPickup[redIndex] == E) {
-    goFast = true;
+  int goFast = 0;
+  if (redIndex == redSteps) return true;
+  if (redPickup[redIndex] == E) {
+    //goFast = 1;
+    if ((redIndex + 1 < redSteps) && (redPath[redIndex + 1] == F) && redPath[redIndex]== F ) {
+      goFast = 1;
+    }
   }
-  if(doTurnSequence(redPath, redIndex, redSteps, goFast)) {
+
+  if (doTurnSequence(redPath, redIndex, redSteps, goFast)) {
     mil = millis();
     redIndex++;
   }
-  if(pickupIndex != redIndex){
-    if(delayState(50)){
+  if (pickupIndex != redIndex) {
+    if (delayState(50)) {
       pickupIndex = redIndex;
     }
   }
-  display.sendNum(redIndex,0);
+  display.sendNum(redIndex, 0);
   doPickupSequence(redPickup, pickupIndex);
   return false;
 }
 
 bool followNeutralPathState() {
-  bool goFast = false;
-  if(neutralIndex == neutralSteps) return true;
-  if(neutralIndex == neutralSteps - 2){
+  int goFast = 0;
+  if (neutralIndex == neutralSteps) return true;
+  if (neutralIndex == neutralSteps - 2) {
     leftArm.write(LEFT_ARM_START);
     rightArm.write(RIGHT_ARM_START);
   }
-  if(neutralPickup[neutralIndex] == E) {
-    goFast = true;
+  if (neutralPickup[neutralIndex] == E) {
+    //goFast = 1;
+    if ((neutralIndex + 1 < neutralSteps) && (neutralPath[neutralIndex + 1] == F) && neutralPath[neutralIndex] == F) {
+      goFast = 1;
+    }
   }
-  if(doTurnSequence(neutralPath, neutralIndex, neutralSteps, goFast)) {
+  if (doTurnSequence(neutralPath, neutralIndex, neutralSteps, goFast)) {
     mil = millis();
     neutralIndex++;
   }
-  display.sendNum(neutralIndex,0);
-  if(pickupIndex != neutralIndex){
-    if(delayState(50)){
+  display.sendNum(neutralIndex, 0);
+  if (pickupIndex != neutralIndex) {
+    if (delayState(50)) {
       pickupIndex = neutralIndex;
     }
   }
@@ -241,24 +257,24 @@ bool followNeutralPathState() {
   return false;
 }
 
-bool depositPeopleState(){
+bool depositPeopleState() {
   static int depositIndex = 0;
   //display.sendMessage(DEPOSITING);
-  switch(depositIndex) {
+  switch (depositIndex) {
     case 0:
-      turn(HALF_SPEED, R);
-      if(sensorCounter == 192){
+      turn(TURN_SPEED, R);
+      if (sensorCounter == 192) {
         writeToWheels(0, 0);
         depositIndex++;
       }
       break;
     case 1:
       dump.write(DO_DUMP);
-      if(delayState(1000)) depositIndex++;
+      if (delayState(1000)) depositIndex++;
       break;
     case 2:
       dump.write(DONT_DUMP);
-      if(turn(HALF_SPEED, R)) {
+      if (turn(TURN_SPEED, R)) {
         depositIndex = 0;
         return true;
       }
@@ -268,9 +284,9 @@ bool depositPeopleState(){
 }
 
 bool doneState() {
-   display.sendMessage(DONE);
-   writeToWheels(0, 0);
-   return false;
+  display.sendMessage(DONE);
+  writeToWheels(0, 0);
+  return false;
 }
 
 

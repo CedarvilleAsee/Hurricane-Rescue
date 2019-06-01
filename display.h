@@ -15,6 +15,12 @@ void printNum(int num){
   oledDisplay.display();
 }
 
+void displayText(String text){
+  oledDisplay.clearDisplay();
+  oledDisplay.setCursor(0,0);
+  oledDisplay.println(text);
+  oledDisplay.display();
+}
 
 void displayMission(int num){
   oledDisplay.clearDisplay();

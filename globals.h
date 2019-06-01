@@ -20,6 +20,8 @@ bool pickingUp = false;
 bool atWall = false;
 bool doPickup = false;
 
+bool atNextLine = false;
+
 //mission globals
 int missionNum = 1;
 char redPath[40];
