@@ -211,7 +211,7 @@ bool followRedPathState() {
   if (redIndex == redSteps) return true;
   if (redPickup[redIndex] == E) {
     //goFast = 1;
-    if ((redIndex + 1 < redSteps) && (redPath[redIndex + 1] == F) && redPath[redIndex]== F ) {
+    if ((redIndex + 1 < redSteps) && (redPath[redIndex + 1] == F) && (redPath[redIndex]== F) && (redIndex != 0) ) {
       goFast = 1;
     }
   }
@@ -239,7 +239,7 @@ bool followNeutralPathState() {
   }
   if (neutralPickup[neutralIndex] == E) {
     //goFast = 1;
-    if ((neutralIndex + 1 < neutralSteps) && (neutralPath[neutralIndex + 1] == F) && neutralPath[neutralIndex] == F) {
+    if ((neutralIndex + 1 < neutralSteps) && (neutralPath[neutralIndex + 1] == F) && neutralPath[neutralIndex] == F && (neutralIndex != 0)) {
       goFast = 1;
     }
   }
@@ -270,7 +270,7 @@ bool depositPeopleState() {
       break;
     case 1:
       dump.write(DO_DUMP);
-      if (delayState(1000)) depositIndex++;
+      if (delayState(2500)) depositIndex++;
       break;
     case 2:
       dump.write(DONT_DUMP);

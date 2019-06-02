@@ -8,7 +8,7 @@ const int FULL_SPEED = 100;
 const int MAX_SPEED = 80;
 const int LINE_STRICTNESS = 20;
 
-const int RED_FAST_SPEED = 150;
+const int RED_FAST_SPEED = 200;
 const int RED_FAST_STRICTNESS = 20;
 const int RED_REALLY_FAST_SPEED = 200;
 const int RED_REALLY_FAST_STRICTNESS = 20;
@@ -41,7 +41,7 @@ const int DO_DUMP = 53;
 const int DONT_DUMP = 8;
 
 const int PERSON_CLOSE_RIGHT = 1600;//2000right old
-const int PERSON_CLOSE_LEFT = 600;//1600left old
+const int PERSON_CLOSE_LEFT = 1600;//1600left old
 
 const int WALL_CLOSE = 1000;//2000 wall
 const int AT_FORK = 3600;//3600 fork
@@ -60,7 +60,7 @@ const int RIGHT_CLAW_OPEN = 100;//100 open
 const int RIGHT_CLAW_CLOSE = 70;//70 close
 
 const int LEFT_CLAW_OPEN = 100;//85 open
-const int LEFT_CLAW_CLOSE = 160;//140 close
+const int LEFT_CLAW_CLOSE = 160;//160;
 
 
 #endif
