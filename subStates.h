@@ -133,7 +133,7 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
           }
           break;
         case 4:
-          if (delayState(100)) {
+          if (delayState(200)) {
             leftClaw.write(LEFT_CLAW_CLOSE);
             pickupStateIndex++;
           }
@@ -187,7 +187,7 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
           }
           break;
         case 4:
-          if (delayState(100)) {
+          if (delayState(200)) {
             pickupStateIndex++;
             rightClaw.write(RIGHT_CLAW_CLOSE);
           }
@@ -209,14 +209,14 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
 bool followRedPathState() {
   int goFast = 0;
   if (redIndex == redSteps) return true;
-  if (redPickup[redIndex] == E) {
+  /*if (redPickup[redIndex] == E) {
     //goFast = 1;
     if ((redIndex + 1 < redSteps) && (redPath[redIndex + 1] == F) && (redPath[redIndex]== F) && (redIndex != 0) ) {
       goFast = 1;
     }
-  }
+  }*/
 
-  if (doTurnSequence(redPath, redIndex, redSteps, goFast)) {
+  if (doTurnSequence(redPath, redIndex, redSteps/*, goFast*/)) {
     mil = millis();
     redIndex++;
   }
@@ -237,13 +237,13 @@ bool followNeutralPathState() {
     leftArm.write(LEFT_ARM_START);
     rightArm.write(RIGHT_ARM_START);
   }
-  if (neutralPickup[neutralIndex] == E) {
+  /*if (neutralPickup[neutralIndex] == E) {
     //goFast = 1;
     if ((neutralIndex + 1 < neutralSteps) && (neutralPath[neutralIndex + 1] == F) && neutralPath[neutralIndex] == F && (neutralIndex != 0)) {
       goFast = 1;
     }
-  }
-  if (doTurnSequence(neutralPath, neutralIndex, neutralSteps, goFast)) {
+  }*/
+  if (doTurnSequence(neutralPath, neutralIndex, neutralSteps/*, goFast*/)) {
     mil = millis();
     neutralIndex++;
   }
