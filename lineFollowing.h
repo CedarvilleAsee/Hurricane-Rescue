@@ -27,7 +27,7 @@ void readLine() {
 }
 
 bool sensorsCentered() {
-  return sensors[3] == HIGH && sensors[4] == HIGH;
+  return sensors[3] == HIGH || sensors[4] == HIGH;//changed from &&
 }
 
 bool sensorsOnRight() {

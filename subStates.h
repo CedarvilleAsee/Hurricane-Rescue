@@ -1,6 +1,9 @@
 #ifndef SUBSTATES
 #define SUBSTATES
 
+
+//fast - followredpathstate, followneutralpathstate
+
 // State 0
 //  Waits until the button on board is pushed, go to next state
 bool waitState() {
@@ -207,7 +210,7 @@ bool doPickupSequence(const char sequence[], int pathIndex) {
 }
 
 bool followRedPathState() {
-  int goFast = 0;
+  //int goFast = 0;
   if (redIndex == redSteps) return true;
   /*if (redPickup[redIndex] == E) {
     //goFast = 1;
@@ -231,7 +234,7 @@ bool followRedPathState() {
 }
 
 bool followNeutralPathState() {
-  int goFast = 0;
+  //int goFast = 0;
   if (neutralIndex == neutralSteps) return true;
   if (neutralIndex == neutralSteps - 2) {
     leftArm.write(LEFT_ARM_START);

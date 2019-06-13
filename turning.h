@@ -1,6 +1,9 @@
 #ifndef TURNING
 #define TURNING
 
+
+//fast - do turn sequence
+
 bool turn(int spd, char dir) {
   static int lineCount = 0;
   static bool gotOffLine = false;
@@ -40,8 +43,8 @@ bool turn(int spd, char dir) {
 }
 
 bool doTurnSequence(const char sequence[], int index, int maxSteps, int redFast = 0) {
-  int speedVal = FULL_SPEED;
-  int turnStrictness = LINE_STRICTNESS;
+  //int speedVal = FULL_SPEED;
+  //int turnStrictness = LINE_STRICTNESS;
   /*if(redFast == 1){
     speedVal = RED_FAST_SPEED;
     turnStrictness = RED_FAST_STRICTNESS;
@@ -52,7 +55,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps, int redFast 
   }*/
   int temp = index + 1; // should be acting on next instruction, not current
   if (temp == maxSteps) {
-    if (lineFollow(speedVal, turnStrictness)) {
+    if (lineFollow(FULL_SPEED, LINE_STRICTNESS)) {
       return true;
     }
   }
@@ -65,7 +68,7 @@ bool doTurnSequence(const char sequence[], int index, int maxSteps, int redFast 
       }
     }
     else {
-      turning = lineFollow(speedVal, turnStrictness);
+      turning = lineFollow(FULL_SPEED, LINE_STRICTNESS);
     }
   }
   return false;
