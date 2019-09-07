@@ -10,8 +10,7 @@ const int LINE_STRICTNESS = 20;
 
 const int RED_FAST_SPEED = 200;
 const int RED_FAST_STRICTNESS = 20;
-const int RED_REALLY_FAST_SPEED = 200;
-const int RED_REALLY_FAST_STRICTNESS = 20;
+
 
 //Joel constants
 const int TARGET_INDEX = 4;

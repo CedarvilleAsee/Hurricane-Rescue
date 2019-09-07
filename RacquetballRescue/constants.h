@@ -32,7 +32,7 @@ const bool WHEEL_BACKWARDS  = false;
 const int DO_DUMP = 70;//ok
 const int DONT_DUMP = 147;//ok
 
-const int WALL_CLOSE = 2500;
+const int WALL_CLOSE = 2800;
 
 const int ROBOT_CLOSE = 150; //<150
 const int ROBOT_GONE = 500;// >500
